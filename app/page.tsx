@@ -2,8 +2,7 @@
 
 import { useLang } from "@/components/LangProvider";
 
-// تم تحديث المصفوفة لتشمل 10 بطاقات
-const cards =;
+const cards = Array.from({ length: 10 }, (_, i) => i + 1);
 
 export default function Home() {
   const { t } = useLang();
