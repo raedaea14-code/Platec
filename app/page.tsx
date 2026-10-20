@@ -2,7 +2,7 @@
 
 import { useLang } from "@/components/LangProvider";
 
-const cards = Array.from({ length: 6 }, (_, i) => i + 1);
+const cards = Array.from({ length: 10 }, (_, i) => i + 1);
 
 export default function Home() {
   const { t } = useLang();
