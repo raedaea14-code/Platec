@@ -18,7 +18,8 @@ const themes: { value: Theme; key: "light" | "dark" }[] = [
 ];
 
 /* قسم قابل للطي: المحتوى مخفي حتى يضغط المستخدم على العنوان.
-   يمكن وضعه داخل قسم آخر (nested) لعمل مستويات فرعية. */
+   يمكن وضعه داخل قسم آخر (nested) لعمل مستويات فرعية.
+   الهامش الجانبي px-5 = 1.25rem */
 function Accordion({
   title,
   nested = false,
@@ -43,7 +44,7 @@ function Accordion({
         className={`flex w-full items-center justify-between text-start ${
           nested
             ? "py-3 text-lg font-medium"
-            : "px-6 py-4 text-xl font-semibold"
+            : "px-5 py-4 text-xl font-semibold"
         }`}
       >
         {title}
@@ -66,7 +67,7 @@ function Accordion({
       >
         <div className="overflow-hidden">
           <div
-            className={`flex flex-col ${nested ? "ps-4 pb-2" : "px-6 pb-3"}`}
+            className={`flex flex-col ${nested ? "ps-5 pb-2" : "px-5 pb-3"}`}
           >
             {children}
           </div>
@@ -91,7 +92,7 @@ function Option({
       type="button"
       aria-pressed={active}
       onClick={onClick}
-      className={`flex w-full items-center justify-between rounded-lg px-3 py-2 text-start text-base transition-colors hover:bg-black/5 dark:hover:bg-white/10 ${
+      className={`flex w-full items-center justify-between py-2 text-start text-base hover:underline ${
         active ? "font-bold" : ""
       }`}
     >
@@ -159,14 +160,14 @@ export default function SideMenu({
           <Link
             href="/"
             onClick={onClose}
-            className="block border-b border-black/15 px-6 py-4 text-xl font-semibold hover:underline dark:border-white/20"
+            className="block border-b border-black/15 px-5 py-4 text-xl font-semibold hover:underline dark:border-white/20"
           >
             {t.home}
           </Link>
         </div>
 
         {/* 2) الشريحة الرئيسية: البطاقات */}
-        <section className="flex h-[31.25rem] flex-col justify-evenly bg-white px-6 text-black md:h-[37.5rem] dark:bg-neutral-900 dark:text-white">
+        <section className="flex h-[31.25rem] flex-col justify-evenly bg-white px-5 text-black md:h-[37.5rem] dark:bg-neutral-900 dark:text-white">
           {cards.map((n) => (
             <Link
               key={n}
@@ -210,7 +211,7 @@ export default function SideMenu({
           {/* القانوني: غير مرئي كعنوان، والرابطان ظاهران مباشرة */}
           <section
             aria-label={t.legal}
-            className="flex flex-col gap-4 border-t border-black/15 px-6 py-4 dark:border-white/20"
+            className="flex flex-col gap-4 border-t border-black/15 px-5 py-4 dark:border-white/20"
           >
             <Link
               href="/terms"
