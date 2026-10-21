@@ -66,9 +66,7 @@ function Accordion({
         }`}
       >
         <div className="overflow-hidden">
-          <div
-            className={`flex flex-col ${nested ? "ps-5 pb-2" : "px-5 pb-3"}`}
-          >
+          <div className={`flex flex-col ${nested ? "pb-2" : "px-5 pb-3"}`}>
             {children}
           </div>
         </div>
