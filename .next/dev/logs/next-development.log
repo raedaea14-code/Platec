@@ -2,3 +2,4 @@
 {"timestamp":"00:00:19.835","source":"Server","level":"LOG","message":"  ? turbo (invalid experimental key)"}
 {"timestamp":"00:00:19.836","source":"Server","level":"LOG","message":"  ? wasmPackages (invalid experimental key)"}
 {"timestamp":"00:00:19.836","source":"Server","level":"LOG","message":""}
+{"timestamp":"00:00:23.157","source":"Server","level":"LOG","message":"○ Compiling /page ..."}
