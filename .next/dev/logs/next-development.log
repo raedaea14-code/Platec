@@ -28,3 +28,5 @@
 {"timestamp":"00:01:54.660","source":"Server","level":"ERROR","message":"⨯ InvariantError: Invariant: Expected workStore to be initialized. This is a bug in Next.js."}
 {"timestamp":"00:01:54.670","source":"Server","level":"ERROR","message":"⨯ InvariantError: Invariant: Expected workStore to be initialized. This is a bug in Next.js."}
 {"timestamp":"00:01:57.354","source":"Server","level":"LOG","message":"○ Compiling /_error ..."}
+{"timestamp":"00:02:03.409","source":"Server","level":"ERROR","message":"⨯ InvariantError: Invariant: Expected workStore to be initialized. This is a bug in Next.js."}
+{"timestamp":"00:02:03.423","source":"Server","level":"ERROR","message":"⨯ InvariantError: Invariant: Expected workStore to be initialized. This is a bug in Next.js."}
