@@ -2,16 +2,16 @@
   "siteName": "Platec",
   "menu": "Menu",
   "close": "Close",
-  "home": "Home",
-  "card": "Card",
   "settings": "Settings",
   "language": "Language",
   "theme": "Theme",
   "light": "Light",
   "dark": "Dark",
+  "card": "Card",
   "legal": "Legal",
-  "terms": "Terms",
-  "privacy": "Privacy",
-  "back": "Back",
-  "rights": "All rights reserved"
+  "terms": "Terms of Use",
+  "privacy": "Privacy Policy",
+  "rights": "All rights reserved",
+  "home": "Platec Home Page",
+  "back": "Back to home"
 }
