@@ -6,6 +6,10 @@
 @theme inline {
   --font-sans: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue",
     Arial, "Noto Sans", "Noto Sans Arabic", sans-serif;
+
+  /* ألوان المظهر الداكن في كل الموقع */
+  --color-neutral-900: #121212;  /* الهيدر + القائمة الجانبية */
+  --color-neutral-800: #1e1e1e;  /* البطاقات (أفتح قليلاً لتتميز عن الخلفية) */
 }
 
 /* iPad = md (768px), Desktop = lg (1024px) */
@@ -16,7 +20,7 @@
 }
 
 .dark {
-  --background: #171717;
+  --background: #121212;
   --foreground: #ffffff;
 }
 
