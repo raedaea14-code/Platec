@@ -1,9 +1,11 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useId, useState } from "react";
-import { useLang, type Lang } from "./LangProvider";
+import { useLocale, useTranslations } from "next-intl";
+import { Link, usePathname, useRouter } from "@/i18n/navigation";
 import { useTheme, type Theme } from "./ThemeProvider";
+
+type Lang = "ar" | "en";
 
 const cards = [1, 2, 3, 4, 5, 6];
 
@@ -107,7 +109,11 @@ export default function SideMenu({
   open: boolean;
   onClose: () => void;
 }) {
-  const { lang, setLang, t } = useLang();
+  const t = useTranslations();
+  const lang = useLocale();
+  const pathname = usePathname();
+  const router = useRouter();
+  const setLang = (l: Lang) => router.replace(pathname, { locale: l });
   const { theme, setTheme } = useTheme();
 
   useEffect(() => {
@@ -144,13 +150,13 @@ export default function SideMenu({
         <section className="relative flex h-[6.25rem] items-center justify-center bg-black text-white md:h-[9.375rem]">
           <button
             type="button"
-            aria-label={t.close}
+            aria-label={t("close")}
             onClick={onClose}
             className="absolute end-3 top-3 flex size-10 items-center justify-center text-3xl leading-none text-white"
           >
             ×
           </button>
-          <p className="text-3xl font-bold">{t.siteName}</p>
+          <p className="text-3xl font-bold">{t("siteName")}</p>
         </section>
 
         {/* رابط الصفحة الرئيسية للموقع */}
@@ -160,7 +166,7 @@ export default function SideMenu({
             onClick={onClose}
             className="block border-b border-black/15 px-5 py-4 text-xl font-semibold hover:underline dark:border-white/20"
           >
-            {t.home}
+            {t("home")}
           </Link>
         </div>
 
@@ -173,15 +179,15 @@ export default function SideMenu({
               onClick={onClose}
               className="text-xl font-semibold hover:underline"
             >
-              {t.card} {n}
+              {t("card")} {n}
             </Link>
           ))}
         </section>
 
         <div className="bg-white text-black dark:bg-neutral-900 dark:text-white">
           {/* الإعدادات: كلمة ظاهرة، وما تحتها يظهر عند الضغط */}
-          <Accordion title={t.settings}>
-            <Accordion nested title={t.language}>
+          <Accordion title={t("settings")}>
+            <Accordion nested title={t("language")}>
               {languages.map((l) => (
                 <Option
                   key={l.code}
@@ -193,14 +199,14 @@ export default function SideMenu({
               ))}
             </Accordion>
 
-            <Accordion nested title={t.theme}>
+            <Accordion nested title={t("theme")}>
               {themes.map((m) => (
                 <Option
                   key={m.value}
                   active={theme === m.value}
                   onClick={() => setTheme(m.value)}
                 >
-                  {t[m.key]}
+                  {t(m.key)}
                 </Option>
               ))}
             </Accordion>
@@ -208,7 +214,7 @@ export default function SideMenu({
 
           {/* القانوني: غير مرئي كعنوان، والرابطان ظاهران مباشرة */}
           <section
-            aria-label={t.legal}
+            aria-label={t("legal")}
             className="flex flex-col gap-4 border-t border-black/15 px-5 py-4 dark:border-white/20"
           >
             <Link
@@ -216,21 +222,21 @@ export default function SideMenu({
               onClick={onClose}
               className="text-xl font-semibold hover:underline"
             >
-              {t.terms}
+              {t("terms")}
             </Link>
             <Link
               href="/privacy"
               onClick={onClose}
               className="text-xl font-semibold hover:underline"
             >
-              {t.privacy}
+              {t("privacy")}
             </Link>
           </section>
         </div>
 
         {/* 3) شريحة النهاية (سوداء) */}
         <section className="flex h-[9.375rem] items-center justify-center bg-black px-4 text-white md:h-[12.5rem]">
-          <p className="text-3xl font-bold">{t.siteName}</p>
+          <p className="text-3xl font-bold">{t("siteName")}</p>
         </section>
       </aside>
     </>
