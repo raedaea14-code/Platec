@@ -16,13 +16,10 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     if (saved === "light" || saved === "dark") setThemeState(saved);
   }, []);
 
-  useEffect(() => {
-    document.documentElement.classList.toggle("dark", theme === "dark");
-  }, [theme]);
-
   const setTheme = (t: Theme) => {
     setThemeState(t);
     localStorage.setItem("theme", t);
+    document.documentElement.classList.toggle("dark", t === "dark");
   };
 
   return (
