@@ -111,10 +111,24 @@ export default function SideMenu({
 }) {
   const t = useTranslations();
   const lang = useLocale();
-  const pathname = usePathname();
   const router = useRouter();
-  const setLang = (l: Lang) => router.replace(pathname, { locale: l });
   const { theme, setTheme } = useTheme();
+
+  /* مفتاح لإعادة ضبط الأقسام المفتوحة (الإعدادات واللغة والمظهر) */
+  const [resetKey, setResetKey] = useState(0);
+
+  /* اختيار لغة: إغلاق القائمة ثم الذهاب للصفحة الرئيسية باللغة المختارة */
+  const setLang = (l: Lang) => {
+    onClose();
+    router.replace("/", { locale: l });
+  };
+
+  /* اختيار مظهر: تطبيقه ثم إغلاق القائمة والذهاب للصفحة الرئيسية */
+  const chooseTheme = (value: Theme) => {
+    setTheme(value);
+    onClose();
+    router.push("/");
+  };
 
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
@@ -127,6 +141,13 @@ export default function SideMenu({
       window.removeEventListener("keydown", onKey);
     };
   }, [open, onClose]);
+
+  /* بعد إغلاق القائمة (وانتهاء حركة الانزلاق 300ms) نعيد الأقسام مطوية */
+  useEffect(() => {
+    if (open) return;
+    const id = setTimeout(() => setResetKey((k) => k + 1), 300);
+    return () => clearTimeout(id);
+  }, [open]);
 
   return (
     <>
@@ -148,13 +169,30 @@ export default function SideMenu({
       >
         {/* 1) شريحة البداية (سوداء) */}
         <section className="relative flex h-[6.25rem] items-center justify-center bg-black text-white md:h-[9.375rem]">
+          {/* زر الإغلاق:
+              الهاتف: أيقونة 1.25rem، مساحة النقر 2.75rem، البعد 1rem
+              الآيباد (md): أيقونة 1.5rem، مساحة النقر 2.75rem، البعد 1.5rem
+              الكمبيوتر (lg): كما كان سابقاً */}
           <button
             type="button"
             aria-label={t("close")}
             onClick={onClose}
-            className="absolute end-3 top-3 flex size-10 items-center justify-center text-3xl leading-none text-white"
+            className="absolute end-1 top-1 flex size-11 items-center justify-center text-white md:end-[0.875rem] md:top-[0.875rem] lg:end-3 lg:top-3 lg:size-10"
           >
-            ×
+            <svg
+              aria-hidden
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              className="size-5 md:size-6 lg:hidden"
+            >
+              <path d="M1 1L23 23M23 1L1 23" />
+            </svg>
+            <span aria-hidden className="hidden text-3xl leading-none lg:inline">
+              ×
+            </span>
           </button>
           <p className="text-3xl font-bold">{t("siteName")}</p>
         </section>
@@ -185,8 +223,9 @@ export default function SideMenu({
         </section>
 
         <div className="bg-white text-black dark:bg-neutral-900 dark:text-white">
-          {/* الإعدادات: كلمة ظاهرة، وما تحتها يظهر عند الضغط */}
-          <Accordion title={t("settings")}>
+          {/* الإعدادات: كلمة ظاهرة، وما تحتها يظهر عند الضغط
+              key={resetKey} يعيدها (مع اللغة والمظهر) مطوية بعد إغلاق القائمة */}
+          <Accordion key={resetKey} title={t("settings")}>
             <Accordion nested title={t("language")}>
               {languages.map((l) => (
                 <Option
@@ -204,7 +243,7 @@ export default function SideMenu({
                 <Option
                   key={m.value}
                   active={theme === m.value}
-                  onClick={() => setTheme(m.value)}
+                  onClick={() => chooseTheme(m.value)}
                 >
                   {t(m.key)}
                 </Option>
