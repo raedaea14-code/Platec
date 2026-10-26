@@ -274,7 +274,7 @@ export default function SideMenu({
         </div>
 
         {/* 3) شريحة النهاية (سوداء) */}
-        <section className="flex h-[9.375rem] items-center justify-center bg-black px-4 text-white md:h-[12.5rem]">
+        <section className="flex h-[3.75rem] items-center justify-center bg-black px-4 text-white md:h-[4.5rem] lg:h-[5rem]">
           <p className="text-3xl font-bold">{t("siteName")}</p>
         </section>
       </aside>
