@@ -43,7 +43,7 @@ function Accordion({
         aria-expanded={open}
         aria-controls={id}
         onClick={() => setOpen((v) => !v)}
-        className={`flex w-full items-center justify-between text-start ${
+        className={`flex w-full cursor-pointer items-center justify-between text-start lg:hover:bg-black/5 dark:lg:hover:bg-white/10 ${
           nested
             ? "py-3 text-lg font-medium"
             : "px-5 py-4 text-xl font-semibold"
@@ -92,7 +92,7 @@ function Option({
       type="button"
       aria-pressed={active}
       onClick={onClick}
-      className={`flex w-full items-center justify-between py-2 text-start text-base hover:underline ${
+      className={`flex w-full cursor-pointer items-center justify-between py-2 text-start text-base hover:underline lg:hover:bg-black/5 dark:lg:hover:bg-white/10 ${
         active ? "font-bold" : ""
       }`}
     >
@@ -117,6 +117,9 @@ export default function SideMenu({
   /* مفتاح لإعادة ضبط الأقسام المفتوحة (الإعدادات واللغة والمظهر) */
   const [resetKey, setResetKey] = useState(0);
 
+  /* الكمبيوتر: نافذة جانبية منبثقة للإعدادات (اللغة والمظهر) */
+  const [settingsOpen, setSettingsOpen] = useState(false);
+
   /* اختيار لغة: إغلاق القائمة ثم الذهاب للصفحة الرئيسية باللغة المختارة */
   const setLang = (l: Lang) => {
     onClose();
@@ -133,19 +136,24 @@ export default function SideMenu({
   useEffect(() => {
     document.body.style.overflow = open ? "hidden" : "";
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key !== "Escape") return;
+      if (settingsOpen) setSettingsOpen(false);
+      else onClose();
     };
     window.addEventListener("keydown", onKey);
     return () => {
       document.body.style.overflow = "";
       window.removeEventListener("keydown", onKey);
     };
-  }, [open, onClose]);
+  }, [open, onClose, settingsOpen]);
 
   /* بعد إغلاق القائمة (وانتهاء حركة الانزلاق 300ms) نعيد الأقسام مطوية */
   useEffect(() => {
     if (open) return;
-    const id = setTimeout(() => setResetKey((k) => k + 1), 300);
+    const id = setTimeout(() => {
+      setResetKey((k) => k + 1);
+      setSettingsOpen(false);
+    }, 300);
     return () => clearTimeout(id);
   }, [open]);
 
@@ -159,74 +167,179 @@ export default function SideMenu({
         }`}
       />
 
-      {/* Slider panel */}
+      {/* Slider panel
+          الهاتف والآيباد: سلايدر جانبي
+          الكمبيوتر (lg): نافذة في وسط الشاشة بعرض أقصى max-w-2xl */}
       <aside
         aria-hidden={!open}
         inert={!open}
-        className={`fixed inset-y-0 start-0 z-[60] h-dvh w-[70%] overflow-y-auto bg-black transition-transform duration-300 sm:w-80 ${
-          open ? "translate-x-0" : "ltr:-translate-x-full rtl:translate-x-full"
+        className={`fixed inset-y-0 start-0 z-[60] h-dvh w-[70%] overflow-y-auto bg-black transition-[transform,opacity] duration-300 sm:w-80 lg:pointer-events-none lg:inset-0 lg:flex lg:h-auto lg:w-auto lg:items-center lg:justify-center lg:overflow-visible lg:bg-transparent ${
+          open
+            ? "translate-x-0 lg:opacity-100"
+            : "ltr:-translate-x-full rtl:translate-x-full lg:opacity-0 lg:ltr:translate-x-0 lg:rtl:translate-x-0"
         }`}
       >
-        {/* 1) شريحة البداية (سوداء) */}
-        <section className="relative flex h-[6.25rem] items-center justify-center bg-black text-white md:h-[9.375rem]">
-          {/* زر الإغلاق:
-              الهاتف: أيقونة 1.25rem، مساحة النقر 2.75rem، البعد 1rem
-              الآيباد (md): أيقونة 1.5rem، مساحة النقر 2.75rem، البعد 1.5rem
-              الكمبيوتر (lg): كما كان سابقاً */}
-          <button
-            type="button"
-            aria-label={t("close")}
-            onClick={onClose}
-            className="absolute end-1 top-1 flex size-11 items-center justify-center text-white md:end-[0.875rem] md:top-[0.875rem] lg:end-3 lg:top-3 lg:size-10"
-          >
-            <svg
-              aria-hidden
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              className="size-5 md:size-6 lg:hidden"
-            >
-              <path d="M1 1L23 23M23 1L1 23" />
-            </svg>
-            <span aria-hidden className="hidden text-3xl leading-none lg:inline">
-              ×
-            </span>
-          </button>
-          <p className="text-3xl font-bold">{t("siteName")}</p>
-        </section>
-
-        {/* رابط الصفحة الرئيسية للموقع */}
-        <div className="bg-white text-black dark:bg-neutral-900 dark:text-white">
-          <Link
-            href="/"
-            onClick={onClose}
-            className="block border-b border-black/15 px-5 py-4 text-xl font-semibold hover:underline dark:border-white/20"
-          >
-            {t("home")}
-          </Link>
-        </div>
-
-        {/* 2) الشريحة الرئيسية: البطاقات */}
-        <section className="flex h-[31.25rem] flex-col justify-evenly bg-white px-5 text-black md:h-[37.5rem] dark:bg-neutral-900 dark:text-white">
-          {cards.map((n) => (
-            <Link
-              key={n}
-              href="/"
+        <div className="lg:pointer-events-auto lg:relative lg:mx-6 lg:w-full lg:max-w-2xl lg:overflow-hidden lg:rounded-2xl lg:shadow-2xl">
+          {/* 1) شريحة البداية (سوداء) */}
+          <section className="relative flex h-[6.25rem] items-center justify-center bg-black text-white md:h-[9.375rem] lg:h-[6.25rem]">
+            {/* زر الإغلاق:
+                الهاتف: أيقونة 1.25rem، مساحة النقر 2.75rem، البعد 1rem
+                الآيباد (md): أيقونة 1.5rem، مساحة النقر 2.75rem، البعد 1.5rem
+                الكمبيوتر (lg): زر 2.5rem، أيقونة text-lg، top-4 end-4 */}
+            <button
+              type="button"
+              aria-label={t("close")}
               onClick={onClose}
-              className="text-xl font-semibold hover:underline"
+              className="absolute end-1 top-1 flex size-11 cursor-pointer items-center justify-center rounded-full text-white transition-colors md:end-[0.875rem] md:top-[0.875rem] lg:end-4 lg:top-4 lg:size-10 lg:hover:bg-white/20 lg:focus-visible:bg-white/20"
             >
-              {t("card")} {n}
-            </Link>
-          ))}
-        </section>
+              <svg
+                aria-hidden
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                className="size-5 md:size-6 lg:hidden"
+              >
+                <path d="M1 1L23 23M23 1L1 23" />
+              </svg>
+              <span aria-hidden className="hidden text-lg leading-none lg:inline">
+                ×
+              </span>
+            </button>
+            <p className="text-3xl font-bold">{t("siteName")}</p>
+          </section>
 
-        <div className="bg-white text-black dark:bg-neutral-900 dark:text-white">
-          {/* الإعدادات: كلمة ظاهرة، وما تحتها يظهر عند الضغط
-              key={resetKey} يعيدها (مع اللغة والمظهر) مطوية بعد إغلاق القائمة */}
-          <Accordion key={resetKey} title={t("settings")}>
-            <Accordion nested title={t("language")}>
+          {/* 2) المحتوى الرئيسي:
+              الكمبيوتر: عمودان (نصف ونصف) بارتفاع أقصى 25rem مع تمرير */}
+          <div className="bg-white text-black dark:bg-neutral-900 dark:text-white lg:grid lg:max-h-[25rem] lg:grid-cols-2 lg:items-start lg:overflow-y-auto">
+            {/* العمود الأول: الرئيسية + البطاقات */}
+            <div>
+              <Link
+                href="/"
+                onClick={onClose}
+                className="block border-b border-black/15 px-5 py-4 text-xl font-semibold hover:underline dark:border-white/20 lg:hover:bg-black/5 dark:lg:hover:bg-white/10"
+              >
+                {t("home")}
+              </Link>
+
+              <section className="flex h-[31.25rem] flex-col justify-evenly px-5 md:h-[37.5rem] lg:h-auto lg:justify-start lg:gap-1 lg:py-3">
+                {cards.map((n) => (
+                  <Link
+                    key={n}
+                    href="/"
+                    onClick={onClose}
+                    className="rounded-md text-xl font-semibold hover:underline lg:-mx-3 lg:px-3 lg:py-2 lg:hover:bg-black/5 dark:lg:hover:bg-white/10"
+                  >
+                    {t("card")} {n}
+                  </Link>
+                ))}
+              </section>
+            </div>
+
+            {/* العمود الثاني: الإعدادات + القانوني */}
+            <div className="lg:border-s lg:border-black/15 dark:lg:border-white/20">
+              {/* الإعدادات: كلمة ظاهرة، وما تحتها يظهر عند الضغط
+                  key={resetKey} يعيدها (مع اللغة والمظهر) مطوية بعد إغلاق القائمة */}
+              {/* الهاتف والآيباد: قسم قابل للطي */}
+              <div className="lg:hidden">
+                <Accordion key={resetKey} title={t("settings")}>
+                  <Accordion nested title={t("language")}>
+                    {languages.map((l) => (
+                      <Option
+                        key={l.code}
+                        active={lang === l.code}
+                        onClick={() => setLang(l.code)}
+                      >
+                        {l.label}
+                      </Option>
+                    ))}
+                  </Accordion>
+
+                  <Accordion nested title={t("theme")}>
+                    {themes.map((m) => (
+                      <Option
+                        key={m.value}
+                        active={theme === m.value}
+                        onClick={() => chooseTheme(m.value)}
+                      >
+                        {t(m.key)}
+                      </Option>
+                    ))}
+                  </Accordion>
+                </Accordion>
+              </div>
+
+              {/* الكمبيوتر: زر يفتح النافذة الجانبية المنبثقة */}
+              <button
+                type="button"
+                aria-haspopup="dialog"
+                aria-expanded={settingsOpen}
+                aria-controls="settings-popup"
+                onClick={() => setSettingsOpen((v) => !v)}
+                className={`hidden w-full cursor-pointer items-center justify-between border-t border-black/15 px-5 py-4 text-start text-xl font-semibold dark:border-white/20 lg:flex lg:hover:bg-black/5 dark:lg:hover:bg-white/10 ${
+                  settingsOpen ? "lg:bg-black/5 dark:lg:bg-white/10" : ""
+                }`}
+              >
+                {t("settings")}
+                <span aria-hidden className="text-base rtl:rotate-180">
+                  ›
+                </span>
+              </button>
+
+              {/* القانوني: غير مرئي كعنوان، والرابطان ظاهران مباشرة */}
+              <section
+                aria-label={t("legal")}
+                className="flex flex-col gap-4 border-t border-black/15 px-5 py-4 dark:border-white/20 lg:gap-1"
+              >
+                <Link
+                  href="/terms"
+                  onClick={onClose}
+                  className="rounded-md text-xl font-semibold hover:underline lg:-mx-3 lg:px-3 lg:py-2 lg:hover:bg-black/5 dark:lg:hover:bg-white/10"
+                >
+                  {t("terms")}
+                </Link>
+                <Link
+                  href="/privacy"
+                  onClick={onClose}
+                  className="rounded-md text-xl font-semibold hover:underline lg:-mx-3 lg:px-3 lg:py-2 lg:hover:bg-black/5 dark:lg:hover:bg-white/10"
+                >
+                  {t("privacy")}
+                </Link>
+              </section>
+            </div>
+          </div>
+
+          {/* نافذة الإعدادات الجانبية المنبثقة (الكمبيوتر فقط):
+              تنزلق من جهة النهاية فوق العمود الثاني */}
+          <div
+            id="settings-popup"
+            role="dialog"
+            aria-label={t("settings")}
+            aria-hidden={!settingsOpen}
+            inert={!settingsOpen}
+            className={`absolute bottom-[6.25rem] top-[6.25rem] end-0 hidden w-1/2 overflow-y-auto border-s border-black/15 bg-white text-black shadow-xl transition-[transform,opacity] duration-300 dark:border-white/20 dark:bg-neutral-900 dark:text-white lg:block ${
+              settingsOpen
+                ? "translate-x-0 opacity-100"
+                : "pointer-events-none opacity-0 ltr:translate-x-full rtl:-translate-x-full"
+            }`}
+          >
+            <div className="flex items-center justify-between border-b border-black/15 px-5 py-3 dark:border-white/20">
+              <p className="text-xl font-semibold">{t("settings")}</p>
+              <button
+                type="button"
+                aria-label={t("close")}
+                onClick={() => setSettingsOpen(false)}
+                className="flex size-10 cursor-pointer items-center justify-center rounded-full text-lg leading-none transition-colors hover:bg-black/10 focus-visible:bg-black/10 dark:hover:bg-white/15 dark:focus-visible:bg-white/15"
+              >
+                ×
+              </button>
+            </div>
+
+            <div className="px-5 py-3">
+              <p className="pb-1 text-sm font-medium opacity-60">
+                {t("language")}
+              </p>
               {languages.map((l) => (
                 <Option
                   key={l.code}
@@ -236,9 +349,12 @@ export default function SideMenu({
                   {l.label}
                 </Option>
               ))}
-            </Accordion>
+            </div>
 
-            <Accordion nested title={t("theme")}>
+            <div className="border-t border-black/15 px-5 py-3 dark:border-white/20">
+              <p className="pb-1 text-sm font-medium opacity-60">
+                {t("theme")}
+              </p>
               {themes.map((m) => (
                 <Option
                   key={m.value}
@@ -248,35 +364,14 @@ export default function SideMenu({
                   {t(m.key)}
                 </Option>
               ))}
-            </Accordion>
-          </Accordion>
+            </div>
+          </div>
 
-          {/* القانوني: غير مرئي كعنوان، والرابطان ظاهران مباشرة */}
-          <section
-            aria-label={t("legal")}
-            className="flex flex-col gap-4 border-t border-black/15 px-5 py-4 dark:border-white/20"
-          >
-            <Link
-              href="/terms"
-              onClick={onClose}
-              className="text-xl font-semibold hover:underline"
-            >
-              {t("terms")}
-            </Link>
-            <Link
-              href="/privacy"
-              onClick={onClose}
-              className="text-xl font-semibold hover:underline"
-            >
-              {t("privacy")}
-            </Link>
+          {/* 3) شريحة النهاية (سوداء) */}
+          <section className="flex h-[3.75rem] items-center justify-center bg-black px-4 text-white md:h-[4.5rem] lg:h-[6.25rem]">
+            <p className="text-3xl font-bold">{t("siteName")}</p>
           </section>
         </div>
-
-        {/* 3) شريحة النهاية (سوداء) */}
-        <section className="flex h-[3.75rem] items-center justify-center bg-black px-4 text-white md:h-[4.5rem] lg:h-[5rem]">
-          <p className="text-3xl font-bold">{t("siteName")}</p>
-        </section>
       </aside>
     </>
   );
