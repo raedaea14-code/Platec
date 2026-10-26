@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useId, useState } from "react";
-import { useLocale, useTranslations } from "next-intl";
+a { useLocale, useTranslations } from "next-intl";
 import { Link, usePathname, useRouter } from "@/i18n/navigation";
 import { useTheme, type Theme } from "./ThemeProvider";
 
