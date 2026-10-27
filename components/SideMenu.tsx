@@ -43,7 +43,7 @@ function Accordion({
         aria-expanded={open}
         aria-controls={id}
         onClick={() => setOpen((v) => !v)}
-        className={`flex w-full cursor-pointer items-center justify-between text-start lg:hover:bg-black/5 dark:lg:hover:bg-white/10 ${
+        className={`flex w-full cursor-pointer items-center justify-between text-start min-[60rem]:hover:bg-black/5 dark:min-[60rem]:hover:bg-white/10 ${
           nested
             ? "py-3 text-lg font-medium"
             : "px-5 py-4 text-xl font-semibold"
@@ -92,7 +92,7 @@ function Option({
       type="button"
       aria-pressed={active}
       onClick={onClick}
-      className={`flex w-full cursor-pointer items-center justify-between py-2 text-start text-base hover:underline lg:hover:bg-black/5 dark:lg:hover:bg-white/10 ${
+      className={`flex w-full cursor-pointer items-center justify-between py-2 text-start text-base hover:underline min-[60rem]:hover:bg-black/5 dark:min-[60rem]:hover:bg-white/10 ${
         active ? "font-bold" : ""
       }`}
     >
@@ -173,15 +173,15 @@ export default function SideMenu({
       <aside
         aria-hidden={!open}
         inert={!open}
-        className={`fixed inset-y-0 start-0 z-[60] h-dvh w-[70%] overflow-y-auto bg-black transition-[transform,opacity] duration-300 sm:w-80 lg:pointer-events-none lg:inset-0 lg:flex lg:h-auto lg:w-auto lg:items-center lg:justify-center lg:overflow-visible lg:bg-transparent ${
+        className={`fixed inset-y-0 start-0 z-[60] h-dvh w-[70%] overflow-y-auto bg-black transition-[transform,opacity] duration-300 sm:w-80 min-[60rem]:pointer-events-none min-[60rem]:inset-0 min-[60rem]:flex min-[60rem]:h-auto min-[60rem]:w-auto min-[60rem]:items-center min-[60rem]:justify-center min-[60rem]:overflow-visible min-[60rem]:bg-transparent ${
           open
-            ? "translate-x-0 lg:opacity-100"
-            : "ltr:-translate-x-full rtl:translate-x-full lg:opacity-0 lg:ltr:translate-x-0 lg:rtl:translate-x-0"
+            ? "translate-x-0 min-[60rem]:opacity-100"
+            : "ltr:-translate-x-full rtl:translate-x-full min-[60rem]:opacity-0 min-[60rem]:ltr:translate-x-0 min-[60rem]:rtl:translate-x-0"
         }`}
       >
-        <div className="lg:pointer-events-auto lg:relative lg:mx-6 lg:w-full lg:max-w-2xl lg:overflow-hidden lg:rounded-2xl lg:shadow-2xl">
+        <div className="min-[60rem]:pointer-events-auto min-[60rem]:relative min-[60rem]:mx-6 min-[60rem]:w-full min-[60rem]:max-w-2xl min-[60rem]:overflow-hidden min-[60rem]:rounded-2xl min-[60rem]:shadow-2xl">
           {/* 1) شريحة البداية (سوداء) */}
-          <section className="relative flex h-[6.25rem] items-center justify-center bg-black text-white md:h-[9.375rem] lg:h-[6.25rem]">
+          <section className="relative flex h-[6.25rem] items-center justify-center bg-black text-white md:h-[9.375rem] min-[60rem]:h-[6.25rem]">
             {/* زر الإغلاق:
                 الهاتف: أيقونة 1.25rem، مساحة النقر 2.75rem، البعد 1rem
                 الآيباد (md): أيقونة 1.5rem، مساحة النقر 2.75rem، البعد 1.5rem
@@ -190,7 +190,7 @@ export default function SideMenu({
               type="button"
               aria-label={t("close")}
               onClick={onClose}
-              className="absolute end-1 top-1 flex size-11 cursor-pointer items-center justify-center rounded-full text-white transition-colors md:end-[0.875rem] md:top-[0.875rem] lg:end-4 lg:top-4 lg:size-10 lg:hover:bg-white/20 lg:focus-visible:bg-white/20"
+              className="absolute end-1 top-1 flex size-11 cursor-pointer items-center justify-center rounded-full text-white transition-colors md:end-[0.875rem] md:top-[0.875rem] min-[60rem]:end-4 min-[60rem]:top-4 min-[60rem]:size-10 min-[60rem]:hover:bg-white/20 min-[60rem]:focus-visible:bg-white/20"
             >
               <svg
                 aria-hidden
@@ -199,11 +199,11 @@ export default function SideMenu({
                 stroke="currentColor"
                 strokeWidth="2"
                 strokeLinecap="round"
-                className="size-5 md:size-6 lg:hidden"
+                className="size-5 md:size-6 min-[60rem]:hidden"
               >
                 <path d="M1 1L23 23M23 1L1 23" />
               </svg>
-              <span aria-hidden className="hidden text-lg leading-none lg:inline">
+              <span aria-hidden className="hidden text-lg leading-none min-[60rem]:inline">
                 ×
               </span>
             </button>
@@ -212,24 +212,24 @@ export default function SideMenu({
 
           {/* 2) المحتوى الرئيسي:
               الكمبيوتر: عمودان (نصف ونصف) بارتفاع أقصى 25rem مع تمرير */}
-          <div className="bg-white text-black dark:bg-neutral-900 dark:text-white lg:grid lg:max-h-[25rem] lg:grid-cols-2 lg:items-start lg:overflow-y-auto">
+          <div className="bg-white text-black dark:bg-neutral-900 dark:text-white min-[60rem]:grid min-[60rem]:max-h-[25rem] min-[60rem]:grid-cols-2 min-[60rem]:items-start min-[60rem]:overflow-y-auto">
             {/* العمود الأول: الرئيسية + البطاقات */}
             <div>
               <Link
                 href="/"
                 onClick={onClose}
-                className="block border-b border-black/15 px-5 py-4 text-xl font-semibold hover:underline dark:border-white/20 lg:hover:bg-black/5 dark:lg:hover:bg-white/10"
+                className="block border-b border-black/15 px-5 py-4 text-xl font-semibold hover:underline dark:border-white/20 min-[60rem]:hover:bg-black/5 dark:min-[60rem]:hover:bg-white/10"
               >
                 {t("home")}
               </Link>
 
-              <section className="flex h-[31.25rem] flex-col justify-evenly px-5 md:h-[37.5rem] lg:h-auto lg:justify-start lg:gap-1 lg:py-3">
+              <section className="flex h-[31.25rem] flex-col justify-evenly px-5 md:h-[37.5rem] min-[60rem]:h-auto min-[60rem]:justify-start min-[60rem]:gap-1 min-[60rem]:py-3">
                 {cards.map((n) => (
                   <Link
                     key={n}
                     href="/"
                     onClick={onClose}
-                    className="rounded-md text-xl font-semibold hover:underline lg:-mx-3 lg:px-3 lg:py-2 lg:hover:bg-black/5 dark:lg:hover:bg-white/10"
+                    className="rounded-md text-xl font-semibold hover:underline min-[60rem]:-mx-3 min-[60rem]:px-3 min-[60rem]:py-2 min-[60rem]:hover:bg-black/5 dark:min-[60rem]:hover:bg-white/10"
                   >
                     {t("card")} {n}
                   </Link>
@@ -238,11 +238,11 @@ export default function SideMenu({
             </div>
 
             {/* العمود الثاني: الإعدادات + القانوني */}
-            <div className="lg:border-s lg:border-black/15 dark:lg:border-white/20">
+            <div className="min-[60rem]:border-s min-[60rem]:border-black/15 dark:min-[60rem]:border-white/20">
               {/* الإعدادات: كلمة ظاهرة، وما تحتها يظهر عند الضغط
                   key={resetKey} يعيدها (مع اللغة والمظهر) مطوية بعد إغلاق القائمة */}
               {/* الهاتف والآيباد: قسم قابل للطي */}
-              <div className="lg:hidden">
+              <div className="min-[60rem]:hidden">
                 <Accordion key={resetKey} title={t("settings")}>
                   <Accordion nested title={t("language")}>
                     {languages.map((l) => (
@@ -277,8 +277,8 @@ export default function SideMenu({
                 aria-expanded={settingsOpen}
                 aria-controls="settings-popup"
                 onClick={() => setSettingsOpen((v) => !v)}
-                className={`hidden w-full cursor-pointer items-center justify-between border-t border-black/15 px-5 py-4 text-start text-xl font-semibold dark:border-white/20 lg:flex lg:hover:bg-black/5 dark:lg:hover:bg-white/10 ${
-                  settingsOpen ? "lg:bg-black/5 dark:lg:bg-white/10" : ""
+                className={`hidden w-full cursor-pointer items-center justify-between border-t border-black/15 px-5 py-4 text-start text-xl font-semibold dark:border-white/20 min-[60rem]:flex min-[60rem]:hover:bg-black/5 dark:min-[60rem]:hover:bg-white/10 ${
+                  settingsOpen ? "min-[60rem]:bg-black/5 dark:min-[60rem]:bg-white/10" : ""
                 }`}
               >
                 {t("settings")}
@@ -290,19 +290,19 @@ export default function SideMenu({
               {/* القانوني: غير مرئي كعنوان، والرابطان ظاهران مباشرة */}
               <section
                 aria-label={t("legal")}
-                className="flex flex-col gap-4 border-t border-black/15 px-5 py-4 dark:border-white/20 lg:gap-1"
+                className="flex flex-col gap-4 border-t border-black/15 px-5 py-4 dark:border-white/20 min-[60rem]:gap-1"
               >
                 <Link
                   href="/terms"
                   onClick={onClose}
-                  className="rounded-md text-xl font-semibold hover:underline lg:-mx-3 lg:px-3 lg:py-2 lg:hover:bg-black/5 dark:lg:hover:bg-white/10"
+                  className="rounded-md text-xl font-semibold hover:underline min-[60rem]:-mx-3 min-[60rem]:px-3 min-[60rem]:py-2 min-[60rem]:hover:bg-black/5 dark:min-[60rem]:hover:bg-white/10"
                 >
                   {t("terms")}
                 </Link>
                 <Link
                   href="/privacy"
                   onClick={onClose}
-                  className="rounded-md text-xl font-semibold hover:underline lg:-mx-3 lg:px-3 lg:py-2 lg:hover:bg-black/5 dark:lg:hover:bg-white/10"
+                  className="rounded-md text-xl font-semibold hover:underline min-[60rem]:-mx-3 min-[60rem]:px-3 min-[60rem]:py-2 min-[60rem]:hover:bg-black/5 dark:min-[60rem]:hover:bg-white/10"
                 >
                   {t("privacy")}
                 </Link>
@@ -318,7 +318,7 @@ export default function SideMenu({
             aria-label={t("settings")}
             aria-hidden={!settingsOpen}
             inert={!settingsOpen}
-            className={`absolute bottom-[6.25rem] top-[6.25rem] end-0 hidden w-1/2 overflow-y-auto border-s border-black/15 bg-white text-black shadow-xl transition-[transform,opacity] duration-300 dark:border-white/20 dark:bg-neutral-900 dark:text-white lg:block ${
+            className={`absolute bottom-[6.25rem] top-[6.25rem] end-0 hidden w-1/2 overflow-y-auto border-s border-black/15 bg-white text-black shadow-xl transition-[transform,opacity] duration-300 dark:border-white/20 dark:bg-neutral-900 dark:text-white min-[60rem]:block ${
               settingsOpen
                 ? "translate-x-0 opacity-100"
                 : "pointer-events-none opacity-0 ltr:translate-x-full rtl:-translate-x-full"
@@ -368,11 +368,11 @@ export default function SideMenu({
           </div>
 
           {/* 3) شريحة النهاية (سوداء) */}
-          <section className="flex h-[3.75rem] items-center justify-center bg-black px-4 text-white md:h-[4.5rem] lg:h-[6.25rem]">
+          <section className="flex h-[3.75rem] items-center justify-center bg-black px-4 text-white md:h-[4.5rem] min-[60rem]:h-[6.25rem]">
             <p className="text-3xl font-bold">{t("siteName")}</p>
           </section>
         </div>
       </aside>
     </>
   );
-}
+    }
