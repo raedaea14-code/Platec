@@ -339,7 +339,7 @@ export default function SideMenu({
             <div className="px-5 py-3">
               <p className="pb-1 text-sm font-medium opacity-60">
                 {t("language")}
-              </p>
+ a             </p>
               {languages.map((l) => (
                 <Option
                   key={l.code}
