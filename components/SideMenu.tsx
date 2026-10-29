@@ -16,7 +16,7 @@ const languages: { code: Lang; label: string }[] = [
 
 const themes: { value: Theme; key: "light" | "dark" }[] = [
   { value: "light", key: "light" },
-  { valuea: "dark", key: "dark" },
+  { value: "dark", key: "dark" },
 ];
 
 /* قسم قابل للطي: المحتوى مخفي حتى يضغط المستخدم على العنوان.
