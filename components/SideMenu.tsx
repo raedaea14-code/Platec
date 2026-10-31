@@ -2,7 +2,7 @@
 
 import { useEffect, useId, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
-import { Link, usePathname, useRouter } from "@/i18n/navigation";
+import { Link, useRouter } from "@/i18n/navigation";
 import { useTheme, type Theme } from "./ThemeProvider";
 
 type Lang = "ar" | "en";
@@ -120,6 +120,9 @@ export default function SideMenu({
   /* الكمبيوتر: نافذة جانبية منبثقة للإعدادات (اللغة والمظهر) */
   const [settingsOpen, setSettingsOpen] = useState(false);
 
+  /* الكمبيوتر: قائمة الصفحات المنبثقة من السهم في الهيدر */
+  const [pagesOpen, setPagesOpen] = useState(false);
+
   /* اختيار لغة: إغلاق القائمة ثم الذهاب للصفحة الرئيسية باللغة المختارة */
   const setLang = (l: Lang) => {
     onClose();
@@ -138,6 +141,7 @@ export default function SideMenu({
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== "Escape") return;
       if (settingsOpen) setSettingsOpen(false);
+      else if (pagesOpen) setPagesOpen(false);
       else onClose();
     };
     window.addEventListener("keydown", onKey);
@@ -145,7 +149,7 @@ export default function SideMenu({
       document.body.style.overflow = "";
       window.removeEventListener("keydown", onKey);
     };
-  }, [open, onClose, settingsOpen]);
+  }, [open, onClose, settingsOpen, pagesOpen]);
 
   /* بعد إغلاق القائمة (وانتهاء حركة الانزلاق 300ms) نعيد الأقسام مطوية */
   useEffect(() => {
@@ -153,6 +157,7 @@ export default function SideMenu({
     const id = setTimeout(() => {
       setResetKey((k) => k + 1);
       setSettingsOpen(false);
+      setPagesOpen(false);
     }, 300);
     return () => clearTimeout(id);
   }, [open]);
@@ -180,17 +185,49 @@ export default function SideMenu({
         }`}
       >
         <div className="min-[49rem]:pointer-events-auto min-[49rem]:relative min-[49rem]:mx-6 min-[49rem]:w-full min-[49rem]:max-w-2xl min-[49rem]:overflow-hidden min-[49rem]:rounded-2xl min-[49rem]:shadow-2xl">
-          {/* 1) شريحة البداية (سوداء) */}
-          <section className="relative flex h-[6.25rem] items-center justify-center bg-black text-white md:h-[9.375rem] min-[49rem]:h-[6.25rem]">
+          {/* 1) شريحة البداية
+              الهاتف والآيباد: سوداء مع زر إغلاق
+              الكمبيوتر: بنفس لون باقي القائمة، سهم (يفتح قائمة الصفحات)
+              في جهة البداية، واسم الموقع في الوسط، وزر الإغلاق في جهة النهاية */}
+          <section className="relative flex h-[6.25rem] items-center justify-center bg-black text-white md:h-[9.375rem] min-[49rem]:h-[6.25rem] min-[49rem]:border-b min-[49rem]:border-black/15 min-[49rem]:bg-white min-[49rem]:text-black dark:min-[49rem]:border-white/20 dark:min-[49rem]:bg-neutral-900 dark:min-[49rem]:text-white">
+            {/* الكمبيوتر فقط: سهم يفتح قائمة الصفحات */}
+            <button
+              type="button"
+              aria-haspopup="menu"
+              aria-expanded={pagesOpen}
+              aria-controls="pages-menu"
+              aria-label={t("siteName")}
+              onClick={() => {
+                setSettingsOpen(false);
+                setPagesOpen((v) => !v);
+              }}
+              className="absolute start-4 top-4 z-20 hidden size-11 cursor-pointer items-center justify-center rounded-full transition-colors hover:bg-black/10 focus-visible:bg-black/10 dark:hover:bg-white/15 dark:focus-visible:bg-white/15 min-[49rem]:flex"
+            >
+              <svg
+                aria-hidden
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className={`size-6 transition-transform duration-300 ${
+                  pagesOpen ? "rotate-180" : ""
+                }`}
+              >
+                <path d="M5 9l7 7 7-7" />
+              </svg>
+            </button>
+
             {/* زر الإغلاق:
                 الهاتف: أيقونة 1.25rem، مساحة النقر 2.75rem، البعد 1rem
                 الآيباد (md): أيقونة 1.5rem، مساحة النقر 2.75rem، البعد 1.5rem
-                الكمبيوتر (lg): زر 2.5rem، أيقونة text-lg، top-4 end-4 */}
+                الكمبيوتر: زر 2.75rem، أيقونة text-2xl، top-4 end-4 */}
             <button
               type="button"
               aria-label={t("close")}
               onClick={onClose}
-              className="absolute end-1 top-1 flex size-11 cursor-pointer items-center justify-center rounded-full text-white transition-colors md:end-[0.875rem] md:top-[0.875rem] min-[49rem]:end-4 min-[49rem]:top-4 min-[49rem]:size-10 min-[49rem]:hover:bg-white/20 min-[49rem]:focus-visible:bg-white/20"
+              className="absolute end-1 top-1 z-20 flex size-11 cursor-pointer items-center justify-center rounded-full text-white transition-colors md:end-[0.875rem] md:top-[0.875rem] min-[49rem]:end-4 min-[49rem]:top-4 min-[49rem]:text-black min-[49rem]:hover:bg-black/10 min-[49rem]:focus-visible:bg-black/10 dark:min-[49rem]:text-white dark:min-[49rem]:hover:bg-white/15 dark:min-[49rem]:focus-visible:bg-white/15"
             >
               <svg
                 aria-hidden
@@ -203,18 +240,61 @@ export default function SideMenu({
               >
                 <path d="M1 1L23 23M23 1L1 23" />
               </svg>
-              <span aria-hidden className="hidden text-lg leading-none min-[49rem]:inline">
+              <span
+                aria-hidden
+                className="hidden text-2xl leading-none min-[49rem]:inline"
+              >
                 ×
               </span>
             </button>
             <p className="text-3xl font-bold">{t("siteName")}</p>
           </section>
 
+          {/* الكمبيوتر: إغلاق قائمة الصفحات عند الضغط خارجها */}
+          {pagesOpen && (
+            <div
+              aria-hidden
+              onClick={() => setPagesOpen(false)}
+              className="absolute inset-0 z-10 hidden min-[49rem]:block"
+            />
+          )}
+
+          {/* الكمبيوتر: قائمة الصفحات المنبثقة من السهم */}
+          <nav
+            id="pages-menu"
+            aria-hidden={!pagesOpen}
+            inert={!pagesOpen}
+            className={`absolute start-4 top-[4.25rem] z-20 hidden max-h-[19rem] w-64 overflow-y-auto rounded-xl border border-black/15 bg-white p-2 text-black shadow-xl transition-[transform,opacity] duration-200 dark:border-white/20 dark:bg-neutral-900 dark:text-white min-[49rem]:block ${
+              pagesOpen
+                ? "translate-y-0 opacity-100"
+                : "pointer-events-none -translate-y-2 opacity-0"
+            }`}
+          >
+            <Link
+              href="/"
+              onClick={onClose}
+              className="block rounded-md px-3 py-2 text-lg font-semibold hover:bg-black/5 dark:hover:bg-white/10"
+            >
+              {t("home")}
+            </Link>
+            {cards.map((n) => (
+              <Link
+                key={n}
+                href="/"
+                onClick={onClose}
+                className="block rounded-md px-3 py-2 text-lg font-semibold hover:bg-black/5 dark:hover:bg-white/10"
+              >
+                {t("card")} {n}
+              </Link>
+            ))}
+          </nav>
+
           {/* 2) المحتوى الرئيسي:
               الكمبيوتر: عمودان (نصف ونصف) بارتفاع أقصى 25rem مع تمرير */}
-          <div className="bg-white text-black dark:bg-neutral-900 dark:text-white min-[49rem]:grid min-[49rem]:max-h-[25rem] min-[49rem]:grid-cols-2 min-[49rem]:items-start min-[49rem]:overflow-y-auto">
-            {/* العمود الأول: الرئيسية + البطاقات */}
-            <div>
+          <div className="bg-white text-black dark:bg-neutral-900 dark:text-white min-[49rem]:max-h-[25rem] min-[49rem]:min-h-[20rem] min-[49rem]:overflow-y-auto">
+            {/* الهاتف والآيباد: الرئيسية + البطاقات
+                (على الكمبيوتر أصبحت داخل قائمة السهم في الهيدر) */}
+            <div className="min-[49rem]:hidden">
               <Link
                 href="/"
                 onClick={onClose}
@@ -237,8 +317,8 @@ export default function SideMenu({
               </section>
             </div>
 
-            {/* العمود الثاني: الإعدادات + القانوني */}
-            <div className="min-[49rem]:border-s min-[49rem]:border-black/15 dark:min-[49rem]:border-white/20">
+            {/* الإعدادات + القانوني */}
+            <div>
               {/* الإعدادات: كلمة ظاهرة، وما تحتها يظهر عند الضغط
                   key={resetKey} يعيدها (مع اللغة والمظهر) مطوية بعد إغلاق القائمة */}
               {/* الهاتف والآيباد: قسم قابل للطي */}
@@ -276,8 +356,11 @@ export default function SideMenu({
                 aria-haspopup="dialog"
                 aria-expanded={settingsOpen}
                 aria-controls="settings-popup"
-                onClick={() => setSettingsOpen((v) => !v)}
-                className={`hidden w-full cursor-pointer items-center justify-between border-t border-black/15 px-5 py-4 text-start text-xl font-semibold dark:border-white/20 min-[49rem]:flex min-[49rem]:hover:bg-black/5 dark:min-[49rem]:hover:bg-white/10 ${
+                onClick={() => {
+                  setPagesOpen(false);
+                  setSettingsOpen((v) => !v);
+                }}
+                className={`hidden w-full cursor-pointer items-center justify-between px-5 py-4 text-start text-xl font-semibold min-[49rem]:flex min-[49rem]:hover:bg-black/5 dark:min-[49rem]:hover:bg-white/10 ${
                   settingsOpen ? "min-[49rem]:bg-black/5 dark:min-[49rem]:bg-white/10" : ""
                 }`}
               >
@@ -318,7 +401,7 @@ export default function SideMenu({
             aria-label={t("settings")}
             aria-hidden={!settingsOpen}
             inert={!settingsOpen}
-            className={`absolute bottom-[6.25rem] top-[6.25rem] end-0 hidden w-1/2 overflow-y-auto border-s border-black/15 bg-white text-black shadow-xl transition-[transform,opacity] duration-300 dark:border-white/20 dark:bg-neutral-900 dark:text-white min-[49rem]:block ${
+            className={`absolute bottom-0 top-[6.25rem] end-0 hidden w-1/2 overflow-y-auto border-s border-black/15 bg-white text-black shadow-xl transition-[transform,opacity] duration-300 dark:border-white/20 dark:bg-neutral-900 dark:text-white min-[49rem]:block ${
               settingsOpen
                 ? "translate-x-0 opacity-100"
                 : "pointer-events-none opacity-0 ltr:translate-x-full rtl:-translate-x-full"
@@ -367,8 +450,8 @@ export default function SideMenu({
             </div>
           </div>
 
-          {/* 3) شريحة النهاية (سوداء) */}
-          <section className="flex h-[3.75rem] items-center justify-center bg-black px-4 text-white md:h-[4.5rem] min-[49rem]:h-[6.25rem]">
+          {/* 3) شريحة النهاية (سوداء): الهاتف والآيباد فقط، محذوفة على الكمبيوتر */}
+          <section className="flex h-[3.75rem] items-center justify-center bg-black px-4 text-white md:h-[4.5rem] min-[49rem]:hidden">
             <p className="text-3xl font-bold">{t("siteName")}</p>
           </section>
         </div>
