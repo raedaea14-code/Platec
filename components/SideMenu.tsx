@@ -1,6 +1,6 @@
 "use client";
 
-impoart { useEffect, useId, useState } from "react";
+import { useEffect, useId, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link, useRouter } from "@/i18n/navigation";
 import { useTheme, type Theme } from "./ThemeProvider";
