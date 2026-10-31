@@ -1,0 +1,6 @@
+{
+  "version": 3,
+  "sources": [],
+  "sections": [
+    {"offset": {"line": 3, "column": 0}, "map": {"version":3,"sources":["file:///workspaces/Platec/messages/ar.json.[json].cjs/turbopack:/messages/ar.json"],"sourcesContent":["{\"siteName\":\"Platec\",\"menu\":\"القائمة\",\"close\":\"إغلاق\",\"settings\":\"إعدادات\",\"language\":\"اللغة\",\"theme\":\"المظهر\",\"light\":\"فاتح\",\"dark\":\"داكن\",\"card\":\"بطاقة\",\"legal\":\"قانوني\",\"terms\":\"شروط الاستخدام\",\"privacy\":\"سياسة الخصوصية\",\"rights\":\"جميع الحقوق محفوظة\",\"home\":\"صفحة Platec الرئيسية\",\"back\":\"العودة للرئيسية\"}"],"names":[],"mappings":""}}]
+}

@@ -1,0 +1,7 @@
+{
+  "/[locale]/page": "/[locale]",
+  "/[locale]/privacy/page": "/[locale]/privacy",
+  "/[locale]/terms/page": "/[locale]/terms",
+  "/_global-error/page": "/_global-error",
+  "/_not-found/page": "/_not-found"
+}

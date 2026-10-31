@@ -1,12 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useLang } from "@/components/LangProvider";
+import { useLocale } from "next-intl";
 
 const cards = Array.from({ length: 10 }, (_, i) => i + 1);
 
 export default function Home() {
-  const { lang } = useLang();
+  const lang = useLocale();
 
   return (
     <section className="mx-auto w-full max-w-[76rem] px-4 py-6 md:px-6 md:py-10 lg:py-14">
