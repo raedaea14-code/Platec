@@ -1,24 +1,24 @@
 "use client";
 
 import Link from "next/link";
-import { useLang } from "@/components/LangProvider";
+import { useLocale, useTranslations } from "next-intl";
 
 const cards = Array.from({ length: 10 }, (_, i) => i + 1);
 
 export default function Home() {
-  const { lang } = useLang();
+  const t = useTranslations();
+  const locale = useLocale();
 
   return (
-    <section className="mx-auto w-full max-w-[76rem] px-4 py-6 md:px-6 md:py-10 lg:py-14">
-      {/* شبكة تتكون من عمودين للهاتف، و4 أعمدة للكمبيوتر في صف واحد */}
-      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6 lg:gap-8 justify-items-center">
+    <section className="mx-auto w-full max-w-7xl p-(--space) py-6 md:py-10 lg:py-14 [--space:clamp(1rem,2.5vw,2.5rem)]">
+      <div className="grid grid-cols-2 gap-(--space) md:grid-cols-3 lg:grid-cols-4">
         {cards.map((n) => (
           <Link
             key={n}
-            href={`/${lang}/tools/${n}`}
-            className="flex h-[9.375rem] w-full items-center justify-center rounded-xl border border-black/15 bg-white text-lg font-semibold text-black shadow-sm transition hover:shadow-md md:h-[11.875rem] md:text-2xl lg:h-[14.375rem] dark:border-white/20 dark:bg-neutral-800 dark:text-white"
+            href={`/${locale}/tools/${n}`}
+            className="flex aspect-[10.5/9.375] w-full items-center justify-center rounded-xl border border-black/15 bg-white text-lg font-semibold text-black shadow-sm transition hover:shadow-md md:aspect-[3/2] md:text-2xl lg:aspect-[6/5] lg:text-3xl dark:border-white/20 dark:bg-neutral-800 dark:text-white"
           >
-            {n}
+            {t("card")} {n}
           </Link>
         ))}
       </div>
