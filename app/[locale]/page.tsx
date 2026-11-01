@@ -1,4 +1,4 @@
-a"use client";
+"use client";
 
 import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
