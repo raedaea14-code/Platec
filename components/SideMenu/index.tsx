@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import { Link, useRouter } from "@/i18n/navigation";
 import type { Theme } from "@/components/ThemeProvider";
 import { useTheme } from "@/components/ThemeProvider";
@@ -142,9 +142,20 @@ export default function SideMenu({
                 className="hidden w-full cursor-pointer items-center justify-between px-5 py-4 text-start text-xl font-semibold min-[49rem]:flex min-[49rem]:hover:bg-black/5 dark:min-[49rem]:hover:bg-white/10"
               >
                 {t("settings")}
-                <span aria-hidden className="text-base rtl:rotate-180">
-                  ›
-                </span>
+                <svg
+                  aria-hidden
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className={`size-5 transition-transform duration-300 ${
+                    settingsOpen ? "rotate-180" : ""
+                  }`}
+                >
+                  <path d="M6 9l6 6 6-6" />
+                </svg>
               </button>
 
               <section
@@ -171,11 +182,7 @@ export default function SideMenu({
 
           {/* لوحة الإعدادات للكمبيوتر (منبثقة) */}
           {settingsOpen && (
-            <DesktopSettingsPanel
-              onClose={() => setSettingsOpen(false)}
-              onLang={setLang}
-              onTheme={chooseTheme}
-            />
+            <DesktopSettingsPanel onLang={setLang} onTheme={chooseTheme} />
           )}
 
           <section className="flex h-[3.75rem] items-center justify-center bg-black px-4 text-white md:h-[4.5rem] min-[49rem]:hidden">
