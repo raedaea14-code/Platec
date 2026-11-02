@@ -25,33 +25,22 @@ export function MobileCards({ onClose }: { onClose: () => void }) {
   );
 }
 
-/* قائمة البطاقات للكمبيوتر (تظهر عند فتح السهم) */
-export function DesktopCardsMenu({
-  open,
-  onClose,
-}: {
-  open: boolean;
-  onClose: () => void;
-}) {
+/* البطاقات للكمبيوتر: ظاهرة دائماً تحت الصفحة الرئيسية */
+export function DesktopCards({ onClose }: { onClose: () => void }) {
   const t = useTranslations();
 
-  if (!open) return null;
-
   return (
-    <div
-      id="pages-menu"
-      className="mt-2 space-y-1 hidden min-[49rem]:block"
-    >
+    <section className="hidden flex-col gap-1 p-3 min-[49rem]:flex">
       {cards.map((n) => (
         <Link
           key={n}
           href="/"
           onClick={onClose}
-          className="block rounded-md px-3 py-2 text-base font-medium transition-colors hover:bg-black/5 dark:hover:bg-white/10"
+          className="rounded-md px-3 py-2 text-base font-medium transition-colors hover:bg-black/5 dark:hover:bg-white/10"
         >
           {t("card")} {n}
         </Link>
       ))}
-    </div>
+    </section>
   );
 }
