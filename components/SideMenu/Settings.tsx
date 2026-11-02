@@ -155,11 +155,9 @@ export function MobileSettings({
 
 /* نافذة الإعدادات المنبثقة للكمبيوتر */
 export function DesktopSettingsPanel({
-  onClose,
   onLang,
   onTheme,
 }: {
-  onClose: () => void;
   onLang: (l: Lang) => void;
   onTheme: (t: Theme) => void;
 }) {
@@ -172,7 +170,7 @@ export function DesktopSettingsPanel({
   );
   const panelRef = useRef<HTMLDivElement>(null);
 
-  // إغلاق القائمة المنبثقة الفرعية عند الضغط خارج اللوحة
+  // إغلاق القائمة الفرعية عند الضغط خارج اللوحة
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (panelRef.current && !panelRef.current.contains(event.target as Node)) {
@@ -186,8 +184,9 @@ export function DesktopSettingsPanel({
   const rowButton =
     "flex w-full cursor-pointer items-center justify-between py-2 text-start text-base font-medium hover:bg-black/5 dark:hover:bg-white/10";
 
+  // الحاوية بنفس عرض نص الصف (start-5 end-5) مع -mx-3 حتى تبدأ كلمات الخيارات (px-3) من نفس الخط
   const dropdownBox =
-    "absolute start-5 top-full z-20 mt-1 w-56 rounded-lg border border-black/15 bg-white p-2 shadow-lg dark:border-white/20 dark:bg-neutral-800";
+    "absolute start-5 end-5 top-full z-20 mt-1 -mx-3 rounded-lg border border-black/15 bg-white py-1 shadow-lg dark:border-white/20 dark:bg-neutral-800";
 
   return (
     <div
@@ -197,16 +196,8 @@ export function DesktopSettingsPanel({
       aria-label={t("settings")}
       className="absolute bottom-0 top-[6.25rem] end-0 hidden w-1/2 overflow-y-auto border-s border-black/15 bg-white text-black shadow-xl dark:border-white/20 dark:bg-neutral-900 dark:text-white min-[49rem]:block"
     >
-      <div className="flex items-center justify-between border-b border-black/15 px-5 py-3 dark:border-white/20">
+      <div className="border-b border-black/15 px-5 py-3 dark:border-white/20">
         <p className="text-xl font-semibold">{t("settings")}</p>
-        <button
-          type="button"
-          aria-label={t("close")}
-          onClick={onClose}
-          className="flex size-10 cursor-pointer items-center justify-center rounded-full text-lg leading-none transition-colors hover:bg-black/10 focus-visible:bg-black/10 dark:hover:bg-white/15 dark:focus-visible:bg-white/15"
-        >
-          ×
-        </button>
       </div>
 
       {/* صف اللغة */}
@@ -224,7 +215,7 @@ export function DesktopSettingsPanel({
           <span
             aria-hidden
             className={`text-sm transition-transform duration-200 ${
-              activeDropdown === "lang" ? "rotate-90 rtl:rotate-90" : "rtl:rotate-180"
+              activeDropdown === "lang" ? "rotate-90" : "rtl:rotate-180"
             }`}
           >
             ›
@@ -264,7 +255,7 @@ export function DesktopSettingsPanel({
           <span
             aria-hidden
             className={`text-sm transition-transform duration-200 ${
-              activeDropdown === "theme" ? "rotate-90 rtl:rotate-90" : "rtl:rotate-180"
+              activeDropdown === "theme" ? "rotate-90" : "rtl:rotate-180"
             }`}
           >
             ›
