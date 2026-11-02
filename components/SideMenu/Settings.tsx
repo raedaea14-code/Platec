@@ -172,7 +172,7 @@ export function DesktopSettingsPanel({
   );
   const panelRef = useRef<HTMLDivElement>(null);
 
-  // إغلاق القائمة المنبثقة عند الضغط خارج اللوحة
+  // إغلاق القائمة المنبثقة الفرعية عند الضغط خارج اللوحة
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (panelRef.current && !panelRef.current.contains(event.target as Node)) {
@@ -195,7 +195,7 @@ export function DesktopSettingsPanel({
       id="settings-popup"
       role="dialog"
       aria-label={t("settings")}
-      className="absolute bottom-0 top-[6.25rem] end-0 hidden w-1/2 overflow-y-auto border-s border-black/15 bg-white text-black shadow-xl transition-[transform,opacity] duration-300 dark:border-white/20 dark:bg-neutral-900 dark:text-white min-[49rem]:block"
+      className="absolute bottom-0 top-[6.25rem] end-0 hidden w-1/2 overflow-y-auto border-s border-black/15 bg-white text-black shadow-xl dark:border-white/20 dark:bg-neutral-900 dark:text-white min-[49rem]:block"
     >
       <div className="flex items-center justify-between border-b border-black/15 px-5 py-3 dark:border-white/20">
         <p className="text-xl font-semibold">{t("settings")}</p>
@@ -213,7 +213,7 @@ export function DesktopSettingsPanel({
       <div className="relative border-b border-black/15 px-5 py-3 dark:border-white/20">
         <button
           type="button"
-          aria-haspopup="menu"
+          aria-haspopup="true"
           aria-expanded={activeDropdown === "lang"}
           onClick={() =>
             setActiveDropdown(activeDropdown === "lang" ? null : "lang")
@@ -224,15 +224,15 @@ export function DesktopSettingsPanel({
           <span
             aria-hidden
             className={`text-sm transition-transform duration-200 ${
-              activeDropdown === "lang" ? "rotate-90" : ""
-            } rtl:-rotate-180`}
+              activeDropdown === "lang" ? "rotate-90 rtl:rotate-90" : "rtl:rotate-180"
+            }`}
           >
             ›
           </span>
         </button>
 
         {activeDropdown === "lang" && (
-          <div role="menu" className={dropdownBox}>
+          <div role="group" className={dropdownBox}>
             {languages.map((l) => (
               <Option
                 key={l.code}
@@ -253,7 +253,7 @@ export function DesktopSettingsPanel({
       <div className="relative px-5 py-3">
         <button
           type="button"
-          aria-haspopup="menu"
+          aria-haspopup="true"
           aria-expanded={activeDropdown === "theme"}
           onClick={() =>
             setActiveDropdown(activeDropdown === "theme" ? null : "theme")
@@ -264,15 +264,15 @@ export function DesktopSettingsPanel({
           <span
             aria-hidden
             className={`text-sm transition-transform duration-200 ${
-              activeDropdown === "theme" ? "rotate-90" : ""
-            } rtl:-rotate-180`}
+              activeDropdown === "theme" ? "rotate-90 rtl:rotate-90" : "rtl:rotate-180"
+            }`}
           >
             ›
           </span>
         </button>
 
         {activeDropdown === "theme" && (
-          <div role="menu" className={dropdownBox}>
+          <div role="group" className={dropdownBox}>
             {themes.map((m) => (
               <Option
                 key={m.value}
