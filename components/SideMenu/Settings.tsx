@@ -1,4 +1,4 @@
-a"use client";
+"use client";
 
 import { useId, useState, useEffect, useRef } from "react";
 import { useLocale, useTranslations } from "next-intl";
