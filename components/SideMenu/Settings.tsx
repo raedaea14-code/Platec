@@ -78,10 +78,12 @@ function Option({
   active,
   onClick,
   children,
+  bleed = false,
 }: {
   active: boolean;
   onClick: () => void;
   children: React.ReactNode;
+  bleed?: boolean;
 }) {
   return (
     <button
@@ -89,8 +91,8 @@ function Option({
       aria-pressed={active}
       onClick={onClick}
       className={`flex w-full cursor-pointer items-center justify-between gap-3 whitespace-nowrap py-2 px-3 text-start text-base hover:bg-black/5 dark:hover:bg-white/10 ${
-        active ? "font-bold" : ""
-      }`}
+        bleed ? "-mx-3" : ""
+      } ${active ? "font-bold" : ""}`}
     >
       <span>{children}</span>
       <span aria-hidden className="w-4 text-center">
@@ -132,6 +134,7 @@ export function MobileSettings({
             key={l.code}
             active={lang === l.code}
             onClick={() => setLang(l.code)}
+            bleed
           >
             {l.label}
           </Option>
@@ -144,6 +147,7 @@ export function MobileSettings({
             key={m.value}
             active={theme === m.value}
             onClick={() => chooseTheme(m.value)}
+            bleed
           >
             {t(m.key)}
           </Option>
@@ -184,7 +188,7 @@ export function DesktopSettingsPanel({
   const rowButton =
     "flex w-full cursor-pointer items-center justify-between py-2 text-start text-base font-medium hover:bg-black/5 dark:hover:bg-white/10";
 
-  // الحاوية بنفس عرض نص الصف (start-5 end-5) مع -mx-3 حتى تبدأ كلمات الخيارات (px-3) من نفس الخط
+  // الحاوية بنفس عرض نص الصف مع -mx-3 حتى تبدأ كلمات الخيارات من نفس خط النص الرئيسي
   const dropdownBox =
     "absolute start-5 end-5 top-full z-20 mt-1 -mx-3 rounded-lg border border-black/15 bg-white py-1 shadow-lg dark:border-white/20 dark:bg-neutral-800";
 
