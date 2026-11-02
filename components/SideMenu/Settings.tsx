@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState } from "react";
+import { useId, useState, useEffect, useRef } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { useTheme, type Theme } from "@/components/ThemeProvider";
@@ -12,13 +12,14 @@ export const languages: { code: Lang; label: string }[] = [
   { code: "en", label: "English" },
 ];
 
-export const themes: { value: Theme; key: "light" | "dark" | "auto" }[] = [
+// مصفوفة المظهر تشمل "تلقائي" من ملف اللغة في البداية ثم "فاتح" و"داكن"
+export const themes: { value: Theme; key: "auto" | "light" | "dark" }[] = [
+  { value: "system", key: "auto" },
   { value: "light", key: "light" },
   { value: "dark", key: "dark" },
-  { value: "auto", key: "auto" },
 ];
 
-export function Accordion({
+function Accordion({
   title,
   nested = false,
   children,
@@ -97,39 +98,6 @@ function Option({
   );
 }
 
-function DesktopOption({
-  active,
-  onClick,
-  children,
-}: {
-  active: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
-}) {
-  return (
-    <button
-      type="button"
-      aria-pressed={active}
-      onClick={onClick}
-      className="flex w-full cursor-pointer items-center justify-between rounded-md px-1 py-2 text-start text-base hover:bg-black/5 dark:hover:bg-white/10"
-    >
-      {children}
-      <span
-        aria-hidden
-        className={`flex size-4 items-center justify-center rounded-full border ${
-          active
-            ? "border-black bg-black dark:border-white dark:bg-white"
-            : "border-black/40 dark:border-white/40"
-        }`}
-      >
-        {active && (
-          <span className="size-1.5 rounded-full bg-white dark:bg-black" />
-        )}
-      </span>
-    </button>
-  );
-}
-
 /* الإعدادات للهاتف والآيباد (أكورديون) */
 export function MobileSettings({
   resetKey,
@@ -185,11 +153,11 @@ export function MobileSettings({
 
 /* نافذة الإعدادات المنبثقة للكمبيوتر */
 export function DesktopSettingsPanel({
-  open,
+  onClose,
   onLang,
   onTheme,
 }: {
-  open: boolean;
+  onClose: () => void;
   onLang: (l: Lang) => void;
   onTheme: (t: Theme) => void;
 }) {
@@ -197,47 +165,95 @@ export function DesktopSettingsPanel({
   const lang = useLocale();
   const { theme } = useTheme();
 
+  const [activeDropdown, setActiveDropdown] = useState<"lang" | "theme" | null>(null);
+  const panelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (panelRef.current && !panelRef.current.contains(event.target as Node)) {
+        setActiveDropdown(null);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   return (
     <div
+      ref={panelRef}
       id="settings-popup"
       role="dialog"
       aria-label={t("settings")}
-      aria-hidden={!open}
-      inert={!open}
-      className={`absolute bottom-0 top-[6.25rem] end-0 hidden w-1/2 overflow-y-auto border-s border-black/15 bg-white text-black shadow-xl transition-[transform,opacity] duration-300 dark:border-white/20 dark:bg-neutral-900 dark:text-white min-[49rem]:block ${
-        open
-          ? "translate-x-0 opacity-100"
-          : "pointer-events-none opacity-0 ltr:translate-x-full rtl:-translate-x-full"
-      }`}
+      className="absolute bottom-0 top-[6.25rem] end-0 hidden w-1/2 overflow-y-auto border-s border-black/15 bg-white text-black shadow-xl transition-[transform,opacity] duration-300 dark:border-white/20 dark:bg-neutral-900 dark:text-white min-[49rem]:block"
     >
-      <p className="border-b border-black/15 px-5 py-3 text-xl font-semibold dark:border-white/20">
-        {t("settings")}
-      </p>
+      <div className="flex items-center justify-between border-b border-black/15 px-5 py-3 dark:border-white/20">
+        <p className="text-xl font-semibold">{t("settings")}</p>
+        <button
+          type="button"
+          aria-label={t("close")}
+          onClick={onClose}
+          className="flex size-10 cursor-pointer items-center justify-center rounded-full text-lg leading-none transition-colors hover:bg-black/10 focus-visible:bg-black/10 dark:hover:bg-white/15 dark:focus-visible:bg-white/15"
+        >
+          ×
+        </button>
+      </div>
 
-      <div className="px-5 py-2">
-        <Accordion nested title={t("language")}>
-          {languages.map((l) => (
-            <DesktopOption
-              key={l.code}
-              active={lang === l.code}
-              onClick={() => onLang(l.code)}
-            >
-              {l.label}
-            </DesktopOption>
-          ))}
-        </Accordion>
+      {/* قائمة اللغة المنبثقة */}
+      <div className="relative border-b border-black/15 px-5 py-3 dark:border-white/20">
+        <button
+          type="button"
+          onClick={() => setActiveDropdown(activeDropdown === "lang" ? null : "lang")}
+          className="flex w-full items-center justify-between py-2 text-start text-base font-medium cursor-pointer"
+        >
+          <span>{t("language")}</span>
+          <span className="text-sm rtl:rotate-180">›</span>
+        </button>
 
-        <Accordion nested title={t("theme")}>
-          {themes.map((m) => (
-            <DesktopOption
-              key={m.value}
-              active={theme === m.value}
-              onClick={() => onTheme(m.value)}
-            >
-              {t(m.key)}
-            </DesktopOption>
-          ))}
-        </Accordion>
+        {activeDropdown === "lang" && (
+          <div className="absolute start-5 end-5 top-full z-20 mt-1 rounded-lg border border-black/15 bg-white p-2 shadow-lg dark:border-white/20 dark:bg-neutral-800">
+            {languages.map((l) => (
+              <Option
+                key={l.code}
+                active={lang === l.code}
+                onClick={() => {
+                  setActiveDropdown(null);
+                  onLang(l.code);
+                }}
+              >
+                {l.label}
+              </Option>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* قائمة المظهر المنبثقة */}
+      <div className="relative px-5 py-3">
+        <button
+          type="button"
+          onClick={() => setActiveDropdown(activeDropdown === "theme" ? null : "theme")}
+          className="flex w-full items-center justify-between py-2 text-start text-base font-medium cursor-pointer"
+        >
+          <span>{t("theme")}</span>
+          <span className="text-sm rtl:rotate-180">›</span>
+        </button>
+
+        {activeDropdown === "theme" && (
+          <div className="absolute start-5 end-5 top-full z-20 mt-1 rounded-lg border border-black/15 bg-white p-2 shadow-lg dark:border-white/20 dark:bg-neutral-800">
+            {themes.map((m) => (
+              <Option
+                key={m.value}
+                active={theme === m.value}
+                onClick={() => {
+                  setActiveDropdown(null);
+                  onTheme(m.value);
+                }}
+              >
+                {t(m.key)}
+              </Option>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
