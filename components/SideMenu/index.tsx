@@ -145,7 +145,7 @@ export default function SideMenu({
           <DesktopCardsMenu open={pagesOpen} onClose={onClose} />
 
           <div className="bg-white text-black dark:bg-neutral-900 dark:text-white min-[49rem]:max-h-[25rem] min-[49rem]:min-h-[20rem] min-[49rem]:overflow-y-auto">
-            <div className="min-[49rem]:hidden">
+            <div>
               <Link
                 href="/"
                 onClick={onClose}
@@ -203,7 +203,7 @@ export default function SideMenu({
           </div>
 
           <DesktopSettingsPanel
-            onClose={() => setSettingsOpen(false)}
+            open={settingsOpen}
             onLang={setLang}
             onTheme={chooseTheme}
           />
