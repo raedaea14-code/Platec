@@ -1,6 +1,0 @@
-{
-  "version": 3,
-  "sources": [],
-  "sections": [
-    {"offset": {"line": 3, "column": 0}, "map": {"version":3,"sources":["file:///workspaces/Platec/messages/en.json.[json].cjs/turbopack:/messages/en.json"],"sourcesContent":["{\"siteName\":\"Platec\",\"menu\":\"Menu\",\"close\":\"Close\",\"settings\":\"Settings\",\"language\":\"Language\",\"theme\":\"Theme\",\"light\":\"Light\",\"dark\":\"Dark\",\"card\":\"Card\",\"legal\":\"Legal\",\"terms\":\"Terms of Use\",\"privacy\":\"Privacy Policy\",\"rights\":\"All rights reserved\",\"home\":\"Platec Home Page\",\"back\":\"Back to home\"}"],"names":[],"mappings":""}}]
-}

@@ -12,12 +12,13 @@ export const languages: { code: Lang; label: string }[] = [
   { code: "en", label: "English" },
 ];
 
-export const themes: { value: Theme; key: "light" | "dark" }[] = [
+export const themes: { value: Theme; key: "light" | "dark" | "auto" }[] = [
   { value: "light", key: "light" },
   { value: "dark", key: "dark" },
+  { value: "auto", key: "auto" },
 ];
 
-function Accordion({
+export function Accordion({
   title,
   nested = false,
   children,
@@ -96,6 +97,39 @@ function Option({
   );
 }
 
+function DesktopOption({
+  active,
+  onClick,
+  children,
+}: {
+  active: boolean;
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <button
+      type="button"
+      aria-pressed={active}
+      onClick={onClick}
+      className="flex w-full cursor-pointer items-center justify-between rounded-md px-1 py-2 text-start text-base hover:bg-black/5 dark:hover:bg-white/10"
+    >
+      {children}
+      <span
+        aria-hidden
+        className={`flex size-4 items-center justify-center rounded-full border ${
+          active
+            ? "border-black bg-black dark:border-white dark:bg-white"
+            : "border-black/40 dark:border-white/40"
+        }`}
+      >
+        {active && (
+          <span className="size-1.5 rounded-full bg-white dark:bg-black" />
+        )}
+      </span>
+    </button>
+  );
+}
+
 /* الإعدادات للهاتف والآيباد (أكورديون) */
 export function MobileSettings({
   resetKey,
@@ -151,11 +185,11 @@ export function MobileSettings({
 
 /* نافذة الإعدادات المنبثقة للكمبيوتر */
 export function DesktopSettingsPanel({
-  onClose,
+  open,
   onLang,
   onTheme,
 }: {
-  onClose: () => void;
+  open: boolean;
   onLang: (l: Lang) => void;
   onTheme: (t: Theme) => void;
 }) {
@@ -168,36 +202,42 @@ export function DesktopSettingsPanel({
       id="settings-popup"
       role="dialog"
       aria-label={t("settings")}
-      className="absolute bottom-0 top-[6.25rem] end-0 hidden w-1/2 overflow-y-auto border-s border-black/15 bg-white text-black shadow-xl transition-[transform,opacity] duration-300 dark:border-white/20 dark:bg-neutral-900 dark:text-white min-[49rem]:block"
+      aria-hidden={!open}
+      inert={!open}
+      className={`absolute bottom-0 top-[6.25rem] end-0 hidden w-1/2 overflow-y-auto border-s border-black/15 bg-white text-black shadow-xl transition-[transform,opacity] duration-300 dark:border-white/20 dark:bg-neutral-900 dark:text-white min-[49rem]:block ${
+        open
+          ? "translate-x-0 opacity-100"
+          : "pointer-events-none opacity-0 ltr:translate-x-full rtl:-translate-x-full"
+      }`}
     >
-      <div className="flex items-center justify-between border-b border-black/15 px-5 py-3 dark:border-white/20">
-        <p className="text-xl font-semibold">{t("settings")}</p>
-        <button
-          type="button"
-          aria-label={t("close")}
-          onClick={onClose}
-          className="flex size-10 cursor-pointer items-center justify-center rounded-full text-lg leading-none transition-colors hover:bg-black/10 focus-visible:bg-black/10 dark:hover:bg-white/15 dark:focus-visible:bg-white/15"
-        >
-          ×
-        </button>
-      </div>
+      <p className="border-b border-black/15 px-5 py-3 text-xl font-semibold dark:border-white/20">
+        {t("settings")}
+      </p>
 
-      <div className="px-5 py-3">
-        <p className="pb-1 text-sm font-medium opacity-60">{t("language")}</p>
-        {languages.map((l) => (
-          <Option key={l.code} active={lang === l.code} onClick={() => onLang(l.code)}>
-            {l.label}
-          </Option>
-        ))}
-      </div>
+      <div className="px-5 py-2">
+        <Accordion nested title={t("language")}>
+          {languages.map((l) => (
+            <DesktopOption
+              key={l.code}
+              active={lang === l.code}
+              onClick={() => onLang(l.code)}
+            >
+              {l.label}
+            </DesktopOption>
+          ))}
+        </Accordion>
 
-      <div className="border-t border-black/15 px-5 py-3 dark:border-white/20">
-        <p className="pb-1 text-sm font-medium opacity-60">{t("theme")}</p>
-        {themes.map((m) => (
-          <Option key={m.value} active={theme === m.value} onClick={() => onTheme(m.value)}>
-            {t(m.key)}
-          </Option>
-        ))}
+        <Accordion nested title={t("theme")}>
+          {themes.map((m) => (
+            <DesktopOption
+              key={m.value}
+              active={theme === m.value}
+              onClick={() => onTheme(m.value)}
+            >
+              {t(m.key)}
+            </DesktopOption>
+          ))}
+        </Accordion>
       </div>
     </div>
   );
