@@ -111,7 +111,8 @@ export default function SideMenu({
               </svg>
             </button>
 
-            <p className="text-2xl font-bold mx-auto min-[49rem]:mx-0">{t("siteName")}</p>
+            {/* اسم الموقع يظهر مرة واحدة فقط */}
+            <p className="text-2xl font-bold">{t("siteName")}</p>
 
             {/* زر الإغلاق */}
             <button
@@ -140,15 +141,17 @@ export default function SideMenu({
               <h3 className="text-lg font-bold border-b pb-2 border-black/10 dark:border-white/10">
                 {t("home")}
               </h3>
-              <div className="min-[49rem]:block">
-                <Link
-                  href="/"
-                  onClick={onClose}
-                  className="block py-2 text-base font-semibold hover:underline"
-                >
-                  {t("siteName")} - الرئيسية
-                </Link>
-                <DesktopCardsMenu open={pagesOpen} onClose={onClose} />
+              
+              <Link
+                href="/"
+                onClick={onClose}
+                className="block py-2 text-base font-semibold hover:underline"
+              >
+                {t("home")}
+              </Link>
+              
+              <DesktopCardsMenu open={pagesOpen} onClose={onClose} />
+              <div className="min-[49rem]:hidden">
                 <MobileCards onClose={onClose} />
               </div>
             </div>
@@ -156,33 +159,33 @@ export default function SideMenu({
             {/* الجهة المقابلة: الإعدادات والسياسات */}
             <div className="space-y-4 mt-6 min-[49rem]:mt-0">
               <h3 className="text-lg font-bold border-b pb-2 border-black/10 dark:border-white/10">
-                {t("settings")} & {t("legal")}
+                {t("settings")}
               </h3>
               
-              <div>
+              <div className="min-[49rem]:hidden">
                 <MobileSettings resetKey={resetKey} onClose={onClose} />
-
-                {/* زر الإعدادات للكمبيوتر */}
-                <button
-                  type="button"
-                  aria-haspopup="dialog"
-                  aria-expanded={settingsOpen}
-                  aria-controls="settings-popup"
-                  onClick={() => {
-                    setPagesOpen(false);
-                    setSettingsOpen((v) => !v);
-                  }}
-                  className={`hidden w-full cursor-pointer items-center justify-between rounded-md px-3 py-2 text-start text-base font-semibold min-[49rem]:flex hover:bg-black/5 dark:hover:bg-white/10 ${
-                    settingsOpen ? "bg-black/5 dark:bg-white/10" : ""
-                  }`}
-                >
-                  <span>{t("settings")}</span>
-                  <span aria-hidden className="text-sm rtl:rotate-180">›</span>
-                </button>
               </div>
 
+              {/* زر الإعدادات للكمبيوتر */}
+              <button
+                type="button"
+                aria-haspopup="dialog"
+                aria-expanded={settingsOpen}
+                aria-controls="settings-popup"
+                onClick={() => {
+                  setPagesOpen(false);
+                  setSettingsOpen((v) => !v);
+                }}
+                className={`hidden w-full cursor-pointer items-center justify-between rounded-md px-3 py-2 text-start text-base font-semibold min-[49rem]:flex hover:bg-black/5 dark:hover:bg-white/10 ${
+                  settingsOpen ? "bg-black/5 dark:bg-white/10" : ""
+                }`}
+              >
+                <span>{t("settings")}</span>
+                <span aria-hidden className="text-sm rtl:rotate-180">›</span>
+              </button>
+
               {/* الشروط وسياسة الخصوصية */}
-              <section aria-label={t("legal")} className="flex flex-col gap-2 pt-2">
+              <section aria-label={t("legal")} className="flex flex-col gap-2 pt-2 border-t border-black/10 dark:border-white/10">
                 <Link
                   href="/terms"
                   onClick={onClose}
