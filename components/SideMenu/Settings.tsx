@@ -14,7 +14,7 @@ export const languages: { code: Lang; label: string }[] = [
 
 // مصفوفة المظهر: "تلقائي" أولاً ثم "فاتح" و"داكن"
 export const themes: { value: Theme; key: "auto" | "light" | "dark" }[] = [
-  { value: "system", key: "auto" },
+  { value: "auto", key: "auto" },
   { value: "light", key: "light" },
   { value: "dark", key: "dark" },
 ];
