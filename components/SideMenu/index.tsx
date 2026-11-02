@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useLocale, useTranslations } from "next-intl";
+import { useTranslations } from "next-intl";
 import { Link, useRouter } from "@/i18n/navigation";
 import type { Theme } from "@/components/ThemeProvider";
 import { useTheme } from "@/components/ThemeProvider";
@@ -77,8 +77,12 @@ export default function SideMenu({
             : "ltr:-translate-x-full rtl:translate-x-full min-[49rem]:opacity-0 min-[49rem]:ltr:translate-x-0 min-[49rem]:rtl:translate-x-0"
         }`}
       >
-        <div className="min-[49rem]:pointer-events-auto min-[49rem]:relative min-[49rem]:mx-6 min-[49rem]:w-full min-[49rem]:max-w-2xl min-[49rem]:overflow-hidden min-[49rem]:rounded-2xl min-[49rem]:shadow-2xl">
-          <section className="relative flex h-[6.25rem] items-center justify-center bg-black text-white md:h-[9.375rem] min-[49rem]:h-[6.25rem] min-[49rem]:border-b min-[49rem]:border-black/15 min-[49rem]:bg-white min-[49rem]:text-black dark:min-[49rem]:border-white/20 dark:min-[49rem]:bg-neutral-900 dark:min-[49rem]:text-white">
+        <div className="min-[49rem]:pointer-events-auto min-[49rem]:relative min-[49rem]:mx-6 min-[49rem]:w-full min-[49rem]:max-w-3xl min-[49rem]:overflow-hidden min-[49rem]:rounded-2xl min-[49rem]:shadow-2xl bg-white text-black dark:bg-neutral-900 dark:text-white">
+          
+          {/* رأس القائمة */}
+          <section className="relative flex h-[5rem] items-center justify-between px-6 border-b border-black/15 dark:border-white/20 bg-black text-white min-[49rem]:bg-white min-[49rem]:text-black dark:min-[49rem]:bg-neutral-900 dark:min-[49rem]:text-white">
+            
+            {/* زر السهم المنسدل للكمبيوتر */}
             <button
               type="button"
               aria-haspopup="menu"
@@ -89,7 +93,7 @@ export default function SideMenu({
                 setSettingsOpen(false);
                 setPagesOpen((v) => !v);
               }}
-              className="absolute start-4 top-4 z-20 hidden size-11 cursor-pointer items-center justify-center rounded-full transition-colors hover:bg-black/10 focus-visible:bg-black/10 dark:hover:bg-white/15 dark:focus-visible:bg-white/15 min-[49rem]:flex"
+              className="hidden size-10 cursor-pointer items-center justify-center rounded-full transition-colors hover:bg-black/10 dark:hover:bg-white/15 min-[49rem]:flex"
             >
               <svg
                 aria-hidden
@@ -99,39 +103,25 @@ export default function SideMenu({
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
-                className={`size-6 transition-transform duration-300 ${
+                className={`size-5 transition-transform duration-300 ${
                   pagesOpen ? "rotate-180" : ""
                 }`}
               >
-                <path d="M5 9l7 7 7-7" />
+                <path d="M6 9l6 6 6-6" />
               </svg>
             </button>
 
+            <p className="text-2xl font-bold mx-auto min-[49rem]:mx-0">{t("siteName")}</p>
+
+            {/* زر الإغلاق */}
             <button
               type="button"
               aria-label={t("close")}
               onClick={onClose}
-              className="absolute end-1 top-1 z-20 flex size-11 cursor-pointer items-center justify-center rounded-full text-white transition-colors md:end-[0.875rem] md:top-[0.875rem] min-[49rem]:end-4 min-[49rem]:top-4 min-[49rem]:text-black min-[49rem]:hover:bg-black/10 min-[49rem]:focus-visible:bg-black/10 dark:min-[49rem]:text-white dark:min-[49rem]:hover:bg-white/15 dark:min-[49rem]:focus-visible:bg-white/15"
+              className="size-10 cursor-pointer flex items-center justify-center rounded-full hover:bg-black/10 dark:hover:bg-white/15 transition-colors"
             >
-              <svg
-                aria-hidden
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                className="size-5 md:size-6 min-[49rem]:hidden"
-              >
-                <path d="M1 1L23 23M23 1L1 23" />
-              </svg>
-              <span
-                aria-hidden
-                className="hidden text-2xl leading-none min-[49rem]:inline"
-              >
-                ×
-              </span>
+              <span className="text-2xl leading-none">×</span>
             </button>
-            <p className="text-3xl font-bold">{t("siteName")}</p>
           </section>
 
           {pagesOpen && (
@@ -142,75 +132,81 @@ export default function SideMenu({
             />
           )}
 
-          <DesktopCardsMenu open={pagesOpen} onClose={onClose} />
-
-          <div className="bg-white text-black dark:bg-neutral-900 dark:text-white min-[49rem]:max-h-[25rem] min-[49rem]:min-h-[20rem] min-[49rem]:overflow-y-auto">
-            <div>
-              <Link
-                href="/"
-                onClick={onClose}
-                className="block border-b border-black/15 px-5 py-4 text-xl font-semibold hover:underline dark:border-white/20 min-[49rem]:hover:bg-black/5 dark:min-[49rem]:hover:bg-white/10"
-              >
+          {/* محتوى القائمة مقسم لجهتين للكمبيوتر */}
+          <div className="p-6 min-[49rem]:grid min-[49rem]:grid-cols-2 min-[49rem]:gap-8">
+            
+            {/* الجهة الأولى: الصفحة الرئيسية والبطاقات */}
+            <div className="space-y-4">
+              <h3 className="text-lg font-bold border-b pb-2 border-black/10 dark:border-white/10">
                 {t("home")}
-              </Link>
-              <MobileCards onClose={onClose} />
+              </h3>
+              <div className="min-[49rem]:block">
+                <Link
+                  href="/"
+                  onClick={onClose}
+                  className="block py-2 text-base font-semibold hover:underline"
+                >
+                  {t("siteName")} - الرئيسية
+                </Link>
+                <DesktopCardsMenu open={pagesOpen} onClose={onClose} />
+                <MobileCards onClose={onClose} />
+              </div>
             </div>
 
-            <div>
-              <div className="min-[49rem]:hidden">
+            {/* الجهة المقابلة: الإعدادات والسياسات */}
+            <div className="space-y-4 mt-6 min-[49rem]:mt-0">
+              <h3 className="text-lg font-bold border-b pb-2 border-black/10 dark:border-white/10">
+                {t("settings")} & {t("legal")}
+              </h3>
+              
+              <div>
                 <MobileSettings resetKey={resetKey} onClose={onClose} />
+
+                {/* زر الإعدادات للكمبيوتر */}
+                <button
+                  type="button"
+                  aria-haspopup="dialog"
+                  aria-expanded={settingsOpen}
+                  aria-controls="settings-popup"
+                  onClick={() => {
+                    setPagesOpen(false);
+                    setSettingsOpen((v) => !v);
+                  }}
+                  className={`hidden w-full cursor-pointer items-center justify-between rounded-md px-3 py-2 text-start text-base font-semibold min-[49rem]:flex hover:bg-black/5 dark:hover:bg-white/10 ${
+                    settingsOpen ? "bg-black/5 dark:bg-white/10" : ""
+                  }`}
+                >
+                  <span>{t("settings")}</span>
+                  <span aria-hidden className="text-sm rtl:rotate-180">›</span>
+                </button>
               </div>
 
-              <button
-                type="button"
-                aria-haspopup="dialog"
-                aria-expanded={settingsOpen}
-                aria-controls="settings-popup"
-                onClick={() => {
-                  setPagesOpen(false);
-                  setSettingsOpen((v) => !v);
-                }}
-                className={`hidden w-full cursor-pointer items-center justify-between px-5 py-4 text-start text-xl font-semibold min-[49rem]:flex min-[49rem]:hover:bg-black/5 dark:min-[49rem]:hover:bg-white/10 ${
-                  settingsOpen ? "min-[49rem]:bg-black/5 dark:min-[49rem]:bg-white/10" : ""
-                }`}
-              >
-                {t("settings")}
-                <span aria-hidden className="text-base rtl:rotate-180">
-                  ›
-                </span>
-              </button>
-
-              <section
-                aria-label={t("legal")}
-                className="flex flex-col gap-4 border-t border-black/15 px-5 py-4 dark:border-white/20 min-[49rem]:gap-1"
-              >
+              {/* الشروط وسياسة الخصوصية */}
+              <section aria-label={t("legal")} className="flex flex-col gap-2 pt-2">
                 <Link
                   href="/terms"
                   onClick={onClose}
-                  className="rounded-md text-xl font-semibold hover:underline min-[49rem]:-mx-3 min-[49rem]:px-3 min-[49rem]:py-2 min-[49rem]:hover:bg-black/5 dark:min-[49rem]:hover:bg-white/10"
+                  className="rounded-md text-base font-medium hover:underline py-1"
                 >
                   {t("terms")}
                 </Link>
                 <Link
                   href="/privacy"
                   onClick={onClose}
-                  className="rounded-md text-xl font-semibold hover:underline min-[49rem]:-mx-3 min-[49rem]:px-3 min-[49rem]:py-2 min-[49rem]:hover:bg-black/5 dark:min-[49rem]:hover:bg-white/10"
+                  className="rounded-md text-base font-medium hover:underline py-1"
                 >
                   {t("privacy")}
                 </Link>
               </section>
             </div>
+
           </div>
 
           <DesktopSettingsPanel
-            open={settingsOpen}
+            onClose={() => setSettingsOpen(false)}
             onLang={setLang}
             onTheme={chooseTheme}
           />
-
-          <section className="flex h-[3.75rem] items-center justify-center bg-black px-4 text-white md:h-[4.5rem] min-[49rem]:hidden">
-            <p className="text-3xl font-bold">{t("siteName")}</p>
-          </section>
         </div>
       </aside>
     </>
