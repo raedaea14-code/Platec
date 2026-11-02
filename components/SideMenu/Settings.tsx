@@ -12,7 +12,7 @@ export const languages: { code: Lang; label: string }[] = [
   { code: "en", label: "English" },
 ];
 
-// مصفوفة المظهر تشمل "تلقائي" من ملف اللغة في البداية ثم "فاتح" و"داكن"
+// مصفوفة المظهر: "تلقائي" أولاً ثم "فاتح" و"داكن"
 export const themes: { value: Theme; key: "auto" | "light" | "dark" }[] = [
   { value: "system", key: "auto" },
   { value: "light", key: "light" },
@@ -88,12 +88,14 @@ function Option({
       type="button"
       aria-pressed={active}
       onClick={onClick}
-      className={`flex w-full cursor-pointer items-center justify-between py-2 text-start text-base hover:underline min-[49rem]:hover:bg-black/5 dark:min-[49rem]:hover:bg-white/10 ${
+      className={`flex w-full cursor-pointer items-center justify-between gap-3 whitespace-nowrap py-2 px-3 text-start text-base hover:bg-black/5 dark:hover:bg-white/10 ${
         active ? "font-bold" : ""
       }`}
     >
-      {children}
-      <span aria-hidden>{active ? "✓" : ""}</span>
+      <span>{children}</span>
+      <span aria-hidden className="w-4 text-center">
+        {active ? "✓" : ""}
+      </span>
     </button>
   );
 }
@@ -165,9 +167,12 @@ export function DesktopSettingsPanel({
   const lang = useLocale();
   const { theme } = useTheme();
 
-  const [activeDropdown, setActiveDropdown] = useState<"lang" | "theme" | null>(null);
+  const [activeDropdown, setActiveDropdown] = useState<"lang" | "theme" | null>(
+    null
+  );
   const panelRef = useRef<HTMLDivElement>(null);
 
+  // إغلاق القائمة المنبثقة عند الضغط خارج اللوحة
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (panelRef.current && !panelRef.current.contains(event.target as Node)) {
@@ -177,6 +182,12 @@ export function DesktopSettingsPanel({
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  const rowButton =
+    "flex w-full cursor-pointer items-center justify-between py-2 text-start text-base font-medium hover:bg-black/5 dark:hover:bg-white/10";
+
+  const dropdownBox =
+    "absolute start-5 top-full z-20 mt-1 w-56 rounded-lg border border-black/15 bg-white p-2 shadow-lg dark:border-white/20 dark:bg-neutral-800";
 
   return (
     <div
@@ -198,19 +209,30 @@ export function DesktopSettingsPanel({
         </button>
       </div>
 
-      {/* قائمة اللغة المنبثقة */}
+      {/* صف اللغة */}
       <div className="relative border-b border-black/15 px-5 py-3 dark:border-white/20">
         <button
           type="button"
-          onClick={() => setActiveDropdown(activeDropdown === "lang" ? null : "lang")}
-          className="flex w-full items-center justify-between py-2 text-start text-base font-medium cursor-pointer"
+          aria-haspopup="menu"
+          aria-expanded={activeDropdown === "lang"}
+          onClick={() =>
+            setActiveDropdown(activeDropdown === "lang" ? null : "lang")
+          }
+          className={rowButton}
         >
           <span>{t("language")}</span>
-          <span className="text-sm rtl:rotate-180">›</span>
+          <span
+            aria-hidden
+            className={`text-sm transition-transform duration-200 ${
+              activeDropdown === "lang" ? "rotate-90" : ""
+            } rtl:-rotate-180`}
+          >
+            ›
+          </span>
         </button>
 
         {activeDropdown === "lang" && (
-          <div className="absolute start-5 end-5 top-full z-20 mt-1 rounded-lg border border-black/15 bg-white p-2 shadow-lg dark:border-white/20 dark:bg-neutral-800">
+          <div role="menu" className={dropdownBox}>
             {languages.map((l) => (
               <Option
                 key={l.code}
@@ -227,19 +249,30 @@ export function DesktopSettingsPanel({
         )}
       </div>
 
-      {/* قائمة المظهر المنبثقة */}
+      {/* صف المظهر */}
       <div className="relative px-5 py-3">
         <button
           type="button"
-          onClick={() => setActiveDropdown(activeDropdown === "theme" ? null : "theme")}
-          className="flex w-full items-center justify-between py-2 text-start text-base font-medium cursor-pointer"
+          aria-haspopup="menu"
+          aria-expanded={activeDropdown === "theme"}
+          onClick={() =>
+            setActiveDropdown(activeDropdown === "theme" ? null : "theme")
+          }
+          className={rowButton}
         >
           <span>{t("theme")}</span>
-          <span className="text-sm rtl:rotate-180">›</span>
+          <span
+            aria-hidden
+            className={`text-sm transition-transform duration-200 ${
+              activeDropdown === "theme" ? "rotate-90" : ""
+            } rtl:-rotate-180`}
+          >
+            ›
+          </span>
         </button>
 
         {activeDropdown === "theme" && (
-          <div className="absolute start-5 end-5 top-full z-20 mt-1 rounded-lg border border-black/15 bg-white p-2 shadow-lg dark:border-white/20 dark:bg-neutral-800">
+          <div role="menu" className={dropdownBox}>
             {themes.map((m) => (
               <Option
                 key={m.value}
