@@ -1,8 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { notFound } from "next/navigation";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
-import { getMessages, setRequestLocale } from "next-intl/server";
-import { routing } from "a@/i18n/routing";
+import { setRequestLocale } from "next-intl/server";
+import { routing } from "@/i18n/routing";
 import "../globals.css";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import Header from "@/components/Header";
@@ -33,8 +33,6 @@ export default async function LocaleLayout({
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
 
-  const messages = await getMessages();
-
   return (
     <html
       lang={locale}
@@ -44,18 +42,18 @@ export default async function LocaleLayout({
       <head>
         <script
           dangerouslySetInnerHTML={{
-            __html: `try{var t=localStorage.getItem("theme");var d=t==="dark"||(t==="auto"&&window.matchMedia("(prefers-color-scheme: dark)").matches);if(d){document.documentElement.classList.add("dark")}}catch(e){}`,
+            __html: `try{if(localStorage.getItem("theme")==="dark"){document.documentElement.classList.add("dark")}}catch(e){}`,
           }}
         />
       </head>
       <body className="flex min-h-screen flex-col font-sans">
-        <NextIntlClientProvider messages={messages}>
-          <ThemeProvider>
+        <ThemeProvider>
+          <NextIntlClientProvider>
             <Header />
             <main className="flex-1">{children}</main>
             <Footer />
-          </ThemeProvider>
-        </NextIntlClientProvider>
+          </NextIntlClientProvider>
+        </ThemeProvider>
       </body>
     </html>
   );
