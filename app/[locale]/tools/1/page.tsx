@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useLocale, useTranslations } from "next-intl";
 
-export default function ToolPage({ params }: { params: { locale: string } }) {
+export default function ToolPage() {
   const t = useTranslations();
   const locale = useLocale();
 
