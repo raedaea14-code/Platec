@@ -190,7 +190,7 @@ module.exports = require("path");
 var __webpack_require__ = require("./webpack-runtime.js");
 __webpack_require__.C(exports);
 var __webpack_exec__ = (moduleId) => (__webpack_require__(__webpack_require__.s = moduleId))
-var __webpack_exports__ = __webpack_require__.X(0, ["vendor-chunks/next","vendor-chunks/next-intl","vendor-chunks/negotiator","vendor-chunks/@formatjs","vendor-chunks/@swc","vendor-chunks/content-type"], () => (__webpack_exec__("(middleware)/./node_modules/next/dist/build/webpack/loaders/next-middleware-loader.js?absolutePagePath=%2Fhome%2Fproject%2Fproxy.ts&page=%2Fproxy&rootDir=%2Fhome%2Fproject&matchers=&preferredRegion=&middlewareConfig=e30%3D!")));
+var __webpack_exports__ = __webpack_require__.X(0, ["vendor-chunks/next","vendor-chunks/next-intl","vendor-chunks/@formatjs","vendor-chunks/@swc","vendor-chunks/negotiator","vendor-chunks/content-type"], () => (__webpack_exec__("(middleware)/./node_modules/next/dist/build/webpack/loaders/next-middleware-loader.js?absolutePagePath=%2Fhome%2Fproject%2Fproxy.ts&page=%2Fproxy&rootDir=%2Fhome%2Fproject&matchers=&preferredRegion=&middlewareConfig=e30%3D!")));
 module.exports = __webpack_exports__;
 
 })();
