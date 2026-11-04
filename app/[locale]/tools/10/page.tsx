@@ -5,7 +5,7 @@ import { Link } from "@/i18n/navigation";
 export const metadata: Metadata = {
   title: "Platec",
 };
-a
+
 export default async function Page() {
   const t = await getTranslations();
 
