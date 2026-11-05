@@ -110,7 +110,7 @@ export default function SideMenu({
             <p className="text-3xl font-bold">{t("siteName")}</p>
           </section>
 
-          {/* المحتوى الرئيسي للكمبيوتر: البطاقات (جهة) والإعدادات والقانون (الجهة المقابلة) */}
+          {/* المحتوى الرئيسي: البطاقات (جهة) والإعدادات والقانون (الجهة المقابلة) */}
           <div className="bg-white text-black dark:bg-neutral-900 dark:text-white min-[49rem]:flex min-[49rem]:max-h-[25rem] min-[49rem]:min-h-[20rem] min-[49rem]:overflow-y-auto">
             {/* الجهة الأولى: الصفحة الرئيسية والبطاقات */}
             <div className="min-[49rem]:flex-1 min-[49rem]:border-e min-[49rem]:border-black/15 dark:min-[49rem]:border-white/20">

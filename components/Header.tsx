@@ -19,14 +19,14 @@ export default function Header() {
           onClick={() => setOpen(true)}
           className="absolute start-4 flex size-10 items-center justify-center md:start-6 md:size-12 lg:start-10"
         >
-          {/* ثلاث خطوط: الهاتف والآيباد (اللمس) */}
-          <span className="flex flex-col items-center justify-center gap-1.5 pointer-fine:hidden">
+          {/* ثلاث خطوط: أقل من 1024px */}
+          <span className="flex flex-col items-center justify-center gap-1.5 lg:hidden">
             <span className="h-0.5 w-6 bg-black md:w-7 dark:bg-white" />
             <span className="h-0.5 w-6 bg-black md:w-7 dark:bg-white" />
             <span className="h-0.5 w-6 bg-black md:w-7 dark:bg-white" />
           </span>
 
-          {/* سهم: الكمبيوتر (الفأرة ولوحة التتبع) */}
+          {/* سهم: 1024px فأكثر */}
           <svg
             aria-hidden
             viewBox="0 0 24 24"
@@ -35,7 +35,7 @@ export default function Header() {
             strokeWidth="2"
             strokeLinecap="round"
             strokeLinejoin="round"
-            className={`hidden size-7 text-black transition-transform duration-300 pointer-fine:block dark:text-white ${
+            className={`hidden size-7 text-black transition-transform duration-300 lg:block dark:text-white ${
               open ? "rotate-180" : ""
             }`}
           >
