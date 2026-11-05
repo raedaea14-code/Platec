@@ -40,7 +40,7 @@ function Accordion({
         aria-expanded={open}
         aria-controls={id}
         onClick={() => setOpen((v) => !v)}
-        className={`flex w-full cursor-pointer items-center justify-between text-start min-[49rem]:hover:bg-black/5 dark:min-[49rem]:hover:bg-white/10 ${
+        className={`flex w-full cursor-pointer items-center justify-between text-start lg:hover:bg-black/5 dark:lg:hover:bg-white/10 ${
           nested
             ? "py-3 text-lg font-medium"
             : "px-5 py-4 text-xl font-semibold"
@@ -102,7 +102,7 @@ function Option({
   );
 }
 
-/* الإعدادات للهاتف والآيباد (أكورديون) */
+/* الإعدادات للهاتف والآيباد (أقل من 1024px) */
 export function MobileSettings({
   resetKey,
   onClose,
@@ -157,7 +157,7 @@ export function MobileSettings({
   );
 }
 
-/* نافذة الإعدادات المنبثقة للكمبيوتر */
+/* نافذة الإعدادات المنبثقة للكمبيوتر (1024px فأكثر) */
 export function DesktopSettingsPanel({
   onLang,
   onTheme,
@@ -188,7 +188,6 @@ export function DesktopSettingsPanel({
   const rowButton =
     "flex w-full cursor-pointer items-center justify-between py-2 text-start text-base font-medium hover:bg-black/5 dark:hover:bg-white/10";
 
-  // الحاوية بنفس عرض نص الصف مع -mx-3 حتى تبدأ كلمات الخيارات من نفس خط النص الرئيسي
   const dropdownBox =
     "absolute start-5 end-5 top-full z-20 mt-1 -mx-3 rounded-lg border border-black/15 bg-white py-1 shadow-lg dark:border-white/20 dark:bg-neutral-800";
 
@@ -198,7 +197,7 @@ export function DesktopSettingsPanel({
       id="settings-popup"
       role="dialog"
       aria-label={t("settings")}
-      className="absolute bottom-0 top-[6.25rem] end-0 hidden w-1/2 overflow-y-auto border-s border-black/15 bg-white text-black shadow-xl dark:border-white/20 dark:bg-neutral-900 dark:text-white min-[49rem]:block"
+      className="absolute bottom-0 top-[6.25rem] end-0 hidden w-1/2 overflow-y-auto border-s border-black/15 bg-white text-black shadow-xl dark:border-white/20 dark:bg-neutral-900 dark:text-white lg:block"
     >
       <div className="border-b border-black/15 px-5 py-3 dark:border-white/20">
         <p className="text-xl font-semibold">{t("settings")}</p>
