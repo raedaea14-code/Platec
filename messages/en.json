@@ -5,7 +5,7 @@
   "settings": "Settings",
   "language": "Language",
   "theme": "Theme",
-  "auto": "Auto",
+  "auto": "System",
   "light": "Light",
   "dark": "Dark",
   "card": "Card",
@@ -14,5 +14,6 @@
   "privacy": "Privacy Policy",
   "rights": "All rights reserved",
   "home": "Platec Home Page",
-  "back": "Back to home"
+  "back": "Back to home",
+  "backToMenu": "Back"
 }
