@@ -23,6 +23,7 @@ export default function SideMenu({
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
 
+  // مراقبة حجم الشاشة: 64rem (= lg) فأكثر = كمبيوتر
   useEffect(() => {
     const mq = window.matchMedia("(min-width: 64rem)");
     const update = () => setIsDesktop(mq.matches);
@@ -91,7 +92,8 @@ export default function SideMenu({
             : "ltr:-translate-x-full rtl:translate-x-full lg:translate-x-0"
         }`}
       >
-        <div className="lg:pointer-events-auto lg:relative lg:mx-6 lg:w-full lg:max-w-2xl xl:max-w-3xl 2xl:max-w-4xl lg:overflow-hidden lg:rounded-2xl lg:shadow-2xl">
+        {/* الحاوية: العرض 50vw | الأدنى 41rem | الأقصى 896px */}
+        <div className="lg:pointer-events-auto lg:relative lg:w-[50vw] lg:min-w-[41rem] lg:max-w-4xl lg:overflow-hidden lg:rounded-2xl lg:shadow-2xl">
           {/* الشريط العلوي (للهاتف والآيباد) */}
           <section className="relative flex h-[6.25rem] items-center justify-center bg-black text-white md:h-[9.375rem] lg:hidden">
             <button
@@ -115,14 +117,14 @@ export default function SideMenu({
             <p className="text-3xl font-bold">{t("siteName")}</p>
           </section>
 
-          {/* المحتوى الرئيسي */}
-          <div className="bg-white text-black dark:bg-neutral-900 dark:text-white lg:flex lg:min-h-[20rem] lg:max-h-[25rem] xl:min-h-[24rem] xl:max-h-[30rem] 2xl:min-h-[30rem] 2xl:max-h-[38rem] lg:overflow-y-auto">
-            {/* الجهة الأولى */}
-            <div className="lg:flex-1 lg:border-e lg:border-black/15 dark:lg:border-white/20">
+          {/* المحتوى: الارتفاع 65vh | الأدنى 28rem | الأقصى 44rem */}
+          <div className="bg-white text-black dark:bg-neutral-900 dark:text-white lg:flex lg:h-[65vh] lg:min-h-[28rem] lg:max-h-[44rem]">
+            {/* العمود الأول: الرئيسية والبطاقات */}
+            <div className="lg:flex-1 lg:overflow-y-auto lg:border-e lg:border-black/15 dark:lg:border-white/20">
               <Link
                 href="/"
                 onClick={closeAll}
-                className="block border-b border-black/15 px-5 py-4 text-xl font-semibold hover:underline xl:text-2xl dark:border-white/20 lg:hover:bg-black/5 dark:lg:hover:bg-white/10"
+                className="block border-b border-black/15 px-5 py-4 text-xl font-semibold hover:underline dark:border-white/20 lg:hover:bg-black/5 xl:text-2xl dark:lg:hover:bg-white/10"
               >
                 {t("home")}
               </Link>
@@ -132,63 +134,67 @@ export default function SideMenu({
               <DesktopCards onClose={closeAll} />
             </div>
 
-            {/* الجهة الثانية */}
-            <div className="lg:flex-1">
-              <div className="lg:hidden">
-                <MobileSettings resetKey={resetKey} onClose={onClose} />
+            {/* العمود الثاني: الإعدادات والشروط والخصوصية */}
+            <div className="relative lg:flex-1 lg:overflow-hidden">
+              <div className="lg:h-full lg:overflow-y-auto">
+                <div className="lg:hidden">
+                  <MobileSettings resetKey={resetKey} onClose={onClose} />
+                </div>
+
+                {/* زر الإعدادات (للكمبيوتر) */}
+                <button
+                  type="button"
+                  aria-expanded={settingsOpen}
+                  onClick={() => setSettingsOpen((v) => !v)}
+                  className="hidden w-full cursor-pointer items-center justify-between px-5 py-4 text-start text-xl font-semibold lg:flex lg:hover:bg-black/5 xl:text-2xl dark:lg:hover:bg-white/10"
+                >
+                  {t("settings")}
+                  <svg
+                    aria-hidden
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    className={`size-5 transition-transform duration-300 ${
+                      settingsOpen ? "rotate-180" : ""
+                    }`}
+                  >
+                    <path d="M6 9l6 6 6-6" />
+                  </svg>
+                </button>
+
+                {/* اللغة والمظهر + اللوحة الفرعية */}
+                {settingsOpen && (
+                  <DesktopSettingsPanel
+                    onLang={setLang}
+                    onTheme={chooseTheme}
+                  />
+                )}
+
+                <section
+                  aria-label={t("legal")}
+                  className="flex flex-col gap-4 border-t border-black/15 px-5 py-4 dark:border-white/20 lg:gap-1"
+                >
+                  <Link
+                    href="/terms"
+                    onClick={closeAll}
+                    className="rounded-md text-lg font-semibold hover:underline lg:-mx-3 lg:px-3 lg:py-2 lg:hover:bg-black/5 xl:text-xl dark:lg:hover:bg-white/10"
+                  >
+                    {t("terms")}
+                  </Link>
+                  <Link
+                    href="/privacy"
+                    onClick={closeAll}
+                    className="rounded-md text-lg font-semibold hover:underline lg:-mx-3 lg:px-3 lg:py-2 lg:hover:bg-black/5 xl:text-xl dark:lg:hover:bg-white/10"
+                  >
+                    {t("privacy")}
+                  </Link>
+                </section>
               </div>
-
-              <button
-                type="button"
-                aria-haspopup="dialog"
-                aria-expanded={settingsOpen}
-                aria-controls="settings-popup"
-                onClick={() => setSettingsOpen((v) => !v)}
-                className="relative z-[70] hidden w-full cursor-pointer items-center justify-between px-5 py-4 text-start text-xl font-semibold xl:text-2xl lg:flex lg:hover:bg-black/5 dark:lg:hover:bg-white/10"
-              >
-                {t("settings")}
-                <svg
-                  aria-hidden
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className={`size-5 transition-transform duration-300 ${
-                    settingsOpen ? "rotate-180" : ""
-                  }`}
-                >
-                  <path d="M6 9l6 6 6-6" />
-                </svg>
-              </button>
-
-              <section
-                aria-label={t("legal")}
-                className="flex flex-col gap-4 border-t border-black/15 px-5 py-4 dark:border-white/20 lg:gap-1"
-              >
-                <Link
-                  href="/terms"
-                  onClick={closeAll}
-                  className="rounded-md text-xl font-semibold hover:underline xl:text-2xl lg:-mx-3 lg:px-3 lg:py-2 lg:hover:bg-black/5 dark:lg:hover:bg-white/10"
-                >
-                  {t("terms")}
-                </Link>
-                <Link
-                  href="/privacy"
-                  onClick={closeAll}
-                  className="rounded-md text-xl font-semibold hover:underline xl:text-2xl lg:-mx-3 lg:px-3 lg:py-2 lg:hover:bg-black/5 dark:lg:hover:bg-white/10"
-                >
-                  {t("privacy")}
-                </Link>
-              </section>
             </div>
           </div>
-
-          {/* لوحة الإعدادات للكمبيوتر */}
-          {settingsOpen && (
-            <DesktopSettingsPanel onLang={setLang} onTheme={chooseTheme} />
-          )}
 
           <section className="flex h-[3.75rem] items-center justify-center bg-black px-4 text-white md:h-[4.5rem] lg:hidden">
             <p className="text-3xl font-bold">{t("siteName")}</p>
