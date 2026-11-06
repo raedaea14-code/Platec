@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useState, useEffect, useRef } from "react";
+import { useId, useState, useEffect } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { useTheme, type Theme } from "@/components/ThemeProvider";
@@ -12,7 +12,7 @@ export const languages: { code: Lang; label: string }[] = [
   { code: "en", label: "English" },
 ];
 
-// مصفوفة المظهر: "تلقائي" أولاً ثم "فاتح" و"داكن"
+// مصفوفة المظهر: "النظام" (auto) أولاً ثم "فاتح" و"داكن"
 export const themes: { value: Theme; key: "auto" | "light" | "dark" }[] = [
   { value: "auto", key: "auto" },
   { value: "light", key: "light" },
@@ -157,7 +157,7 @@ export function MobileSettings({
   );
 }
 
-/* نافذة الإعدادات المنبثقة للكمبيوتر (1024px فأكثر) */
+/* إعدادات الكمبيوتر (1024px فأكثر): صفّان + لوحة فرعية تغطي العمود الثاني */
 export function DesktopSettingsPanel({
   onLang,
   onTheme,
@@ -168,120 +168,98 @@ export function DesktopSettingsPanel({
   const t = useTranslations();
   const lang = useLocale();
   const { theme } = useTheme();
+  const [sub, setSub] = useState<"lang" | "theme" | null>(null);
 
-  const [activeDropdown, setActiveDropdown] = useState<"lang" | "theme" | null>(
-    null
-  );
-  const panelRef = useRef<HTMLDivElement>(null);
-
-  // إغلاق القائمة الفرعية عند الضغط خارج اللوحة
+  // Escape: يغلق اللوحة الفرعية أولاً دون إغلاق القائمة
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (panelRef.current && !panelRef.current.contains(event.target as Node)) {
-        setActiveDropdown(null);
-      }
+    if (!sub) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      e.stopPropagation();
+      setSub(null);
     };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+    document.addEventListener("keydown", onKey, true);
+    return () => document.removeEventListener("keydown", onKey, true);
+  }, [sub]);
 
-  const rowButton =
-    "flex w-full cursor-pointer items-center justify-between py-2 text-start text-base font-medium hover:bg-black/5 dark:hover:bg-white/10";
+  const currentLang = languages.find((l) => l.code === lang)?.label ?? lang;
+  const currentTheme = themes.find((m) => m.value === theme);
 
-  const dropdownBox =
-    "absolute start-5 end-5 top-full z-20 mt-1 -mx-3 rounded-lg border border-black/15 bg-white py-1 shadow-lg dark:border-white/20 dark:bg-neutral-800";
+  const row =
+    "flex w-full cursor-pointer items-center justify-between gap-3 px-5 py-3 text-start hover:bg-black/5 dark:hover:bg-white/10";
 
   return (
-    <div
-      ref={panelRef}
-      id="settings-popup"
-      role="dialog"
-      aria-label={t("settings")}
-      className="absolute bottom-0 top-[6.25rem] end-0 hidden w-1/2 overflow-y-auto border-s border-black/15 bg-white text-black shadow-xl dark:border-white/20 dark:bg-neutral-900 dark:text-white lg:block"
-    >
-      <div className="border-b border-black/15 px-5 py-3 dark:border-white/20">
-        <p className="text-xl font-semibold">{t("settings")}</p>
-      </div>
-
-      {/* صف اللغة */}
-      <div className="relative border-b border-black/15 px-5 py-3 dark:border-white/20">
-        <button
-          type="button"
-          aria-haspopup="true"
-          aria-expanded={activeDropdown === "lang"}
-          onClick={() =>
-            setActiveDropdown(activeDropdown === "lang" ? null : "lang")
-          }
-          className={rowButton}
-        >
-          <span>{t("language")}</span>
-          <span
-            aria-hidden
-            className={`text-sm transition-transform duration-200 ${
-              activeDropdown === "lang" ? "rotate-90" : "rtl:rotate-180"
-            }`}
-          >
-            ›
+    <div className="hidden lg:block">
+      {/* الصفّان: اللغة والمظهر */}
+      <div className="border-t border-black/15 dark:border-white/20">
+        <button type="button" onClick={() => setSub("lang")} className={row}>
+          <span className="text-lg font-medium xl:text-xl">
+            {t("language")}
+          </span>
+          <span className="text-base opacity-60">{currentLang}</span>
+        </button>
+        <button type="button" onClick={() => setSub("theme")} className={row}>
+          <span className="text-lg font-medium xl:text-xl">{t("theme")}</span>
+          <span className="text-base opacity-60">
+            {currentTheme ? t(currentTheme.key) : ""}
           </span>
         </button>
-
-        {activeDropdown === "lang" && (
-          <div role="group" className={dropdownBox}>
-            {languages.map((l) => (
-              <Option
-                key={l.code}
-                active={lang === l.code}
-                onClick={() => {
-                  setActiveDropdown(null);
-                  onLang(l.code);
-                }}
-              >
-                {l.label}
-              </Option>
-            ))}
-          </div>
-        )}
       </div>
 
-      {/* صف المظهر */}
-      <div className="relative px-5 py-3">
-        <button
-          type="button"
-          aria-haspopup="true"
-          aria-expanded={activeDropdown === "theme"}
-          onClick={() =>
-            setActiveDropdown(activeDropdown === "theme" ? null : "theme")
-          }
-          className={rowButton}
-        >
-          <span>{t("theme")}</span>
-          <span
-            aria-hidden
-            className={`text-sm transition-transform duration-200 ${
-              activeDropdown === "theme" ? "rotate-90" : "rtl:rotate-180"
-            }`}
+      {/* اللوحة الفرعية: تغطي العمود الثاني (الأب relative) */}
+      {sub && (
+        <div className="absolute inset-0 z-50 flex flex-col bg-white text-black dark:bg-neutral-900 dark:text-white">
+          <button
+            type="button"
+            onClick={() => setSub(null)}
+            className="flex w-full cursor-pointer items-center gap-2 border-b border-black/15 px-5 py-4 text-start text-lg font-semibold hover:bg-black/5 dark:border-white/20 dark:hover:bg-white/10 xl:text-xl"
           >
-            ›
-          </span>
-        </button>
+            <svg
+              aria-hidden
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="size-5 rtl:rotate-180"
+            >
+              <path d="M15 6l-6 6 6 6" />
+            </svg>
+            {t("backToMenu")}
+          </button>
 
-        {activeDropdown === "theme" && (
-          <div role="group" className={dropdownBox}>
-            {themes.map((m) => (
-              <Option
-                key={m.value}
-                active={theme === m.value}
-                onClick={() => {
-                  setActiveDropdown(null);
-                  onTheme(m.value);
-                }}
-              >
-                {t(m.key)}
-              </Option>
-            ))}
+          <div className="flex-1 overflow-y-auto">
+            {sub === "lang" &&
+              languages.map((l) => (
+                <button
+                  key={l.code}
+                  type="button"
+                  aria-pressed={lang === l.code}
+                  onClick={() => onLang(l.code)}
+                  className={`${row} ${lang === l.code ? "font-bold" : ""}`}
+                >
+                  <span className="text-lg xl:text-xl">{l.label}</span>
+                  <span aria-hidden>{lang === l.code ? "✓" : ""}</span>
+                </button>
+              ))}
+
+            {sub === "theme" &&
+              themes.map((m) => (
+                <button
+                  key={m.value}
+                  type="button"
+                  aria-pressed={theme === m.value}
+                  onClick={() => onTheme(m.value)}
+                  className={`${row} ${theme === m.value ? "font-bold" : ""}`}
+                >
+                  <span className="text-lg xl:text-xl">{t(m.key)}</span>
+                  <span aria-hidden>{theme === m.value ? "✓" : ""}</span>
+                </button>
+              ))}
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
