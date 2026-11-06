@@ -23,7 +23,6 @@ export default function SideMenu({
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
 
-  // مراقبة حجم الشاشة: 64rem (= lg في Tailwind) فأكثر = كمبيوتر
   useEffect(() => {
     const mq = window.matchMedia("(min-width: 64rem)");
     const update = () => setIsDesktop(mq.matches);
@@ -75,9 +74,10 @@ export default function SideMenu({
 
   return (
     <>
+      {/* الخلفية: تظهر على كل الشاشات، والنقر عليها يغلق الكل */}
       <div
-        onClick={onClose}
-        className={`fixed inset-0 z-[55] bg-black/50 transition-opacity duration-300 lg:hidden ${
+        onClick={closeAll}
+        className={`fixed inset-0 z-[55] bg-black/50 transition-opacity duration-300 ${
           open ? "opacity-100" : "pointer-events-none opacity-0"
         }`}
       />
@@ -91,7 +91,7 @@ export default function SideMenu({
             : "ltr:-translate-x-full rtl:translate-x-full lg:translate-x-0"
         }`}
       >
-        <div className="lg:pointer-events-auto lg:relative lg:mx-6 lg:w-full lg:max-w-2xl lg:overflow-hidden lg:rounded-2xl lg:shadow-2xl">
+        <div className="lg:pointer-events-auto lg:relative lg:mx-6 lg:w-full lg:max-w-2xl xl:max-w-3xl 2xl:max-w-4xl lg:overflow-hidden lg:rounded-2xl lg:shadow-2xl">
           {/* الشريط العلوي (للهاتف والآيباد) */}
           <section className="relative flex h-[6.25rem] items-center justify-center bg-black text-white md:h-[9.375rem] lg:hidden">
             <button
@@ -115,14 +115,14 @@ export default function SideMenu({
             <p className="text-3xl font-bold">{t("siteName")}</p>
           </section>
 
-          {/* المحتوى الرئيسي: للكمبيوتر يظهر كصفحة منبثقة */}
-          <div className="bg-white text-black dark:bg-neutral-900 dark:text-white lg:flex lg:min-h-[20rem] lg:max-h-[25rem] lg:overflow-y-auto">
-            {/* الجهة الأولى: الصفحة الرئيسية والبطاقات */}
+          {/* المحتوى الرئيسي */}
+          <div className="bg-white text-black dark:bg-neutral-900 dark:text-white lg:flex lg:min-h-[20rem] lg:max-h-[25rem] xl:min-h-[24rem] xl:max-h-[30rem] 2xl:min-h-[30rem] 2xl:max-h-[38rem] lg:overflow-y-auto">
+            {/* الجهة الأولى */}
             <div className="lg:flex-1 lg:border-e lg:border-black/15 dark:lg:border-white/20">
               <Link
                 href="/"
                 onClick={closeAll}
-                className="block border-b border-black/15 px-5 py-4 text-xl font-semibold hover:underline dark:border-white/20 lg:hover:bg-black/5 dark:lg:hover:bg-white/10"
+                className="block border-b border-black/15 px-5 py-4 text-xl font-semibold hover:underline xl:text-2xl dark:border-white/20 lg:hover:bg-black/5 dark:lg:hover:bg-white/10"
               >
                 {t("home")}
               </Link>
@@ -132,7 +132,7 @@ export default function SideMenu({
               <DesktopCards onClose={closeAll} />
             </div>
 
-            {/* الجهة الثانية: الإعدادات والشروط والخصوصية */}
+            {/* الجهة الثانية */}
             <div className="lg:flex-1">
               <div className="lg:hidden">
                 <MobileSettings resetKey={resetKey} onClose={onClose} />
@@ -144,7 +144,7 @@ export default function SideMenu({
                 aria-expanded={settingsOpen}
                 aria-controls="settings-popup"
                 onClick={() => setSettingsOpen((v) => !v)}
-                className="hidden w-full cursor-pointer items-center justify-between px-5 py-4 text-start text-xl font-semibold lg:flex lg:hover:bg-black/5 dark:lg:hover:bg-white/10"
+                className="relative z-[70] hidden w-full cursor-pointer items-center justify-between px-5 py-4 text-start text-xl font-semibold xl:text-2xl lg:flex lg:hover:bg-black/5 dark:lg:hover:bg-white/10"
               >
                 {t("settings")}
                 <svg
@@ -170,14 +170,14 @@ export default function SideMenu({
                 <Link
                   href="/terms"
                   onClick={closeAll}
-                  className="rounded-md text-xl font-semibold hover:underline lg:-mx-3 lg:px-3 lg:py-2 lg:hover:bg-black/5 dark:lg:hover:bg-white/10"
+                  className="rounded-md text-xl font-semibold hover:underline xl:text-2xl lg:-mx-3 lg:px-3 lg:py-2 lg:hover:bg-black/5 dark:lg:hover:bg-white/10"
                 >
                   {t("terms")}
                 </Link>
                 <Link
                   href="/privacy"
                   onClick={closeAll}
-                  className="rounded-md text-xl font-semibold hover:underline lg:-mx-3 lg:px-3 lg:py-2 lg:hover:bg-black/5 dark:lg:hover:bg-white/10"
+                  className="rounded-md text-xl font-semibold hover:underline xl:text-2xl lg:-mx-3 lg:px-3 lg:py-2 lg:hover:bg-black/5 dark:lg:hover:bg-white/10"
                 >
                   {t("privacy")}
                 </Link>
@@ -185,7 +185,7 @@ export default function SideMenu({
             </div>
           </div>
 
-          {/* لوحة الإعدادات للكمبيوتر (منبثقة) */}
+          {/* لوحة الإعدادات للكمبيوتر */}
           {settingsOpen && (
             <DesktopSettingsPanel onLang={setLang} onTheme={chooseTheme} />
           )}
